@@ -1,16 +1,17 @@
 package com.shenjun.corgivideoplayer
 
 import android.app.Activity
-import android.os.Bundle
-import com.shenjun.corgicore.log.CorgiLogger
+import com.shenjun.corgivideoplayer.common.BaseIndexActivity
+import com.shenjun.corgivideoplayer.corgi.CorgiIndexActivity
 
 /**
  * Created by shenjun on 2018/11/20.
  */
-class DemoHomeActivity : Activity() {
+class DemoHomeActivity : BaseIndexActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        CorgiLogger.v("hello")
+    override fun provideIndexMap(): Map<String, Class<out Activity>> {
+        return mapOf<String, Class<out Activity>>(
+            "Corgi" to CorgiIndexActivity::class.java
+        )
     }
 }

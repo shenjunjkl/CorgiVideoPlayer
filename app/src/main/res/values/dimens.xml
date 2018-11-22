@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--dimensions based on width 750 device-->
+
+    <dimen name="px10">5dp</dimen>
+    <dimen name="px20">10dp</dimen>
+    <dimen name="px26">13dp</dimen>
+
+
+</resources>

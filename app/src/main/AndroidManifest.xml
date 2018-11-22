@@ -15,5 +15,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".corgi.CorgiIndexActivity"/>
+        <activity android:name=".corgi.fullscreen.CorgiFullscreenActivity"/>
+
     </application>
 </manifest>
