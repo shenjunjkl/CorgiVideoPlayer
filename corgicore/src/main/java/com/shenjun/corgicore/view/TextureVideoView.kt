@@ -1,0 +1,70 @@
+package com.shenjun.corgicore.view
+
+import android.content.Context
+import android.graphics.SurfaceTexture
+import android.util.AttributeSet
+import android.view.Gravity
+import android.view.TextureView
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import com.shenjun.corgicore.callback.VideoViewCallback
+
+/**
+ * Created by shenjun on 2018/12/31.
+ *
+ * a base video view provides surface texture.
+ */
+open class TextureVideoView(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr),
+    TextureView.SurfaceTextureListener {
+
+    private val mTextureView = TextureView(context)
+    private var mSurface: SurfaceTexture? = null
+    protected var mVideoViewCallback: VideoViewCallback? = null
+
+    init {
+        initTextureView()
+    }
+
+    private fun initTextureView() {
+        val lp = LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        lp.gravity = Gravity.CENTER
+        addView(mTextureView, lp)
+        mTextureView.keepScreenOn = true
+        mTextureView.surfaceTextureListener = this
+    }
+
+    override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
+        surface?.let {
+            mSurface = it
+            mVideoViewCallback?.onViewSurfaceAvailable(surface)
+        }
+    }
+
+    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {}
+
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+        mSurface = null
+        mVideoViewCallback?.onViewSurfaceDestroyed()
+        return false
+    }
+
+    override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {}
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        mVideoViewCallback?.onViewSizeChanged(w, h)
+    }
+
+    fun setVideoViewCallback(callback: VideoViewCallback) {
+        mVideoViewCallback = callback
+        mSurface?.let {
+            callback.onViewSurfaceAvailable(it)
+        }
+    }
+}

@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import com.shenjun.corgivideoplayer.R
+import kotlin.reflect.KClass
 
 /**
  * Created by shenjun on 2018/11/23.
@@ -19,22 +20,25 @@ import com.shenjun.corgivideoplayer.R
 @SuppressLint("Registered")
 abstract class BaseIndexActivity : Activity() {
 
-    abstract fun provideIndexMap() : Map<String, Class<out Activity>>
+    abstract fun provideIndexMap(): Map<String, KClass<out Activity>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val scrollView = ScrollView(this)
         scrollView.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+        )
         val linearLayout = LinearLayout(this)
         linearLayout.orientation = LinearLayout.VERTICAL
         linearLayout.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+        )
         scrollView.addView(linearLayout)
         setContentView(scrollView)
 
         val lp = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         lp.topMargin = resources.getDimension(R.dimen.px20).toInt()
         lp.gravity = Gravity.CENTER_HORIZONTAL
 
@@ -53,9 +57,9 @@ abstract class BaseIndexActivity : Activity() {
         }
     }
 
-    private fun jumpToActivity(actClass: Class<out Activity>) {
+    private fun jumpToActivity(actClass: KClass<out Activity>) {
         val intent = Intent()
-        intent.setClass(this, actClass)
+        intent.setClass(this, actClass.java)
         startActivity(intent)
     }
 }
