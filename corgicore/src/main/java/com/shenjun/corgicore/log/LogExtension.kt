@@ -14,6 +14,6 @@ class CorgiLog {
 
 fun Any.logW(msg: String) {
     if (CorgiLog.DEBUG) {
-        Log.d(javaClass.simpleName, msg)
+        Log.d("Corgi#${javaClass.simpleName}", msg)
     }
 }

@@ -16,7 +16,8 @@
         </activity>
 
         <activity android:name=".corgi.CorgiIndexActivity"/>
-        <activity android:name=".corgi.fullscreen.CorgiFullscreenActivity"/>
+        <activity android:name=".corgi.fullscreen.CorgiFullscreenActivity"
+                  android:screenOrientation="landscape"/>
 
     </application>
 </manifest>

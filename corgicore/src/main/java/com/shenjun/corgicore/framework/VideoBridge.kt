@@ -3,6 +3,8 @@ package com.shenjun.corgicore.framework
 import android.graphics.SurfaceTexture
 import com.shenjun.corgicore.callback.VideoViewCallback
 import com.shenjun.corgicore.log.logW
+import com.shenjun.corgicore.player.PlayerStateMachine
+import com.shenjun.corgicore.player.msg.MsgInit
 import com.shenjun.corgicore.view.ControllerVideoView
 
 /**
@@ -14,12 +16,15 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     val videoConfig: VideoConfig = VideoConfig()
 ) : VideoViewCallback {
 
+    private val mStateMachine = PlayerStateMachine()
+
     init {
         initVideoBridge()
     }
 
     private fun initVideoBridge() {
         videoView.setVideoViewCallback(this)
+        mStateMachine.post(MsgInit())
     }
 
     override fun onViewSizeChanged(width: Int, height: Int) {
