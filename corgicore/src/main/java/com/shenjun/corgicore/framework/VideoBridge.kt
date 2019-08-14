@@ -2,7 +2,8 @@ package com.shenjun.corgicore.framework
 
 import android.graphics.SurfaceTexture
 import com.shenjun.corgicore.callback.VideoViewCallback
-import com.shenjun.corgicore.log.logW
+import com.shenjun.corgicore.log.logD
+import com.shenjun.corgicore.player.IVideoPlayer
 import com.shenjun.corgicore.player.PlayerStateMachine
 import com.shenjun.corgicore.player.msg.MsgInit
 import com.shenjun.corgicore.view.ControllerVideoView
@@ -13,8 +14,8 @@ import com.shenjun.corgicore.view.ControllerVideoView
 open class VideoBridge<out P : AbstractVideoRepo>(
     private val repo: P,
     private val videoView: ControllerVideoView,
-    val videoConfig: VideoConfig = VideoConfig()
-) : VideoViewCallback {
+    private val videoConfig: VideoConfig = VideoConfig()
+) : VideoViewCallback, IVideoPlayer.IPlayerCallback {
 
     private val mStateMachine = PlayerStateMachine()
 
@@ -24,18 +25,21 @@ open class VideoBridge<out P : AbstractVideoRepo>(
 
     private fun initVideoBridge() {
         videoView.setVideoViewCallback(this)
-        mStateMachine.post(MsgInit())
+    }
+
+    fun startPlay() {
+        mStateMachine.post(MsgInit(videoConfig, this))
     }
 
     override fun onViewSizeChanged(width: Int, height: Int) {
-        logW("onViewSurfaceAvailable: width = $width, height = $height")
+        logD("onViewSurfaceAvailable: width = $width, height = $height")
     }
 
     override fun onViewSurfaceAvailable(surfaceTexture: SurfaceTexture) {
-        logW("onViewSurfaceAvailable: $surfaceTexture")
+        logD("onViewSurfaceAvailable: $surfaceTexture")
     }
 
     override fun onViewSurfaceDestroyed() {
-        logW("onViewSurfaceDestroyed")
+        logD("onViewSurfaceDestroyed")
     }
 }

@@ -2,6 +2,7 @@ package com.shenjun.corgicore.player
 
 import android.os.Handler
 import android.os.Message
+import com.shenjun.corgicore.log.logD
 import com.shenjun.corgicore.player.msg.IPlayerMsg
 import java.lang.ref.WeakReference
 
@@ -27,18 +28,15 @@ class PlayerStateMachine {
         mVideoPlayerImpl = player
     }
 
-    private class MediaMsgHandler(
-        stateMachine: PlayerStateMachine
-    ) : Handler() {
+    private class MediaMsgHandler(stateMachine: PlayerStateMachine) : Handler() {
 
         private val mRef = WeakReference(stateMachine)
 
         override fun handleMessage(msg: Message?) {
             val obj = msg?.obj as? IPlayerMsg ?: return
+            logD("handle msg: ${obj.what()}")
             mRef.get()?.apply {
-                mVideoPlayerImpl?.let { p ->
-                    mCurrentState = obj.transferState(mCurrentState, p, this)
-                }
+                mCurrentState = obj.transferState(mCurrentState, mVideoPlayerImpl, this)
             }
         }
     }

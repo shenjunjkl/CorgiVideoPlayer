@@ -11,5 +11,5 @@ interface IPlayerMsg {
 
     fun what() = javaClass.simpleName.hashCode()
 
-    fun transferState(fromState: PlayerState, player: IVideoPlayer, machine: PlayerStateMachine): PlayerState
+    fun transferState(fromState: PlayerState, player: IVideoPlayer?, machine: PlayerStateMachine): PlayerState
 }

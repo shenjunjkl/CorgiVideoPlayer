@@ -12,8 +12,16 @@ class CorgiLog {
     }
 }
 
-fun Any.logW(msg: String) {
+fun Any.logD(msg: String) {
     if (CorgiLog.DEBUG) {
-        Log.d("Corgi#${javaClass.simpleName}", msg)
+        Log.d(createTag(), msg)
     }
 }
+
+fun Any.logW(msg: String) {
+    if (CorgiLog.DEBUG) {
+        Log.w(createTag(), msg)
+    }
+}
+
+private fun Any.createTag() = "Corgi#${javaClass.simpleName}"

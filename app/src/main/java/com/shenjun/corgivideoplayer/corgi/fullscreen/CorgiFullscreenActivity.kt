@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.shenjun.corgicore.framework.VideoBridge
 import com.shenjun.corgicore.framework.VideoConfig
 import com.shenjun.corgicore.view.ControllerVideoView
+import com.shenjun.corgiextension.player.ijk.IjkPlayerProvider
 import com.shenjun.corgivideoplayer.corgi.CorgiRepo
 
 /**
@@ -17,6 +18,10 @@ class CorgiFullscreenActivity : Activity() {
         val view = ControllerVideoView(this)
         setContentView(view)
         val repo = CorgiRepo()
-        val bridge = VideoBridge(repo, view, VideoConfig())
+
+        val config = VideoConfig()
+        config.playerProvider = IjkPlayerProvider()
+        val bridge = VideoBridge(repo, view, config)
+        bridge.startPlay()
     }
 }

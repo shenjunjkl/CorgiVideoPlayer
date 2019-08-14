@@ -5,8 +5,19 @@ package com.shenjun.corgicore.player
  */
 interface IVideoPlayer {
 
-
-
+    fun create()
 
     fun release()
+
+    fun registerCallback(callback: IPlayerCallback)
+
+    fun unregisterCallback(callback: IPlayerCallback)
+
+    interface IPlayerCallback {
+
+    }
+
+    interface IPlayerProvider {
+        fun createVideoPlayer(): IVideoPlayer
+    }
 }
