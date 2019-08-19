@@ -2,10 +2,13 @@ package com.shenjun.corgicore.framework
 
 import android.graphics.SurfaceTexture
 import com.shenjun.corgicore.callback.VideoViewCallback
+import com.shenjun.corgicore.constant.InterceptorConst
+import com.shenjun.corgicore.data.VideoInfo
 import com.shenjun.corgicore.log.logD
 import com.shenjun.corgicore.player.IVideoPlayer
 import com.shenjun.corgicore.player.PlayerStateMachine
 import com.shenjun.corgicore.player.msg.MsgInit
+import com.shenjun.corgicore.player.msg.MsgPrepare
 import com.shenjun.corgicore.view.ControllerVideoView
 
 /**
@@ -15,9 +18,10 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     private val repo: P,
     private val videoView: ControllerVideoView,
     private val videoConfig: VideoConfig = VideoConfig()
-) : VideoViewCallback, IVideoPlayer.IPlayerCallback {
+) : VideoViewCallback, IVideoPlayer.IPlayerCallback, AbstractVideoRepo.RepoCallback {
 
     private val mStateMachine = PlayerStateMachine()
+    private val mInterceptors = mutableListOf<VideoInterceptor>()
 
     init {
         initVideoBridge()
@@ -25,6 +29,7 @@ open class VideoBridge<out P : AbstractVideoRepo>(
 
     private fun initVideoBridge() {
         videoView.setVideoViewCallback(this)
+        repo.setRepoCallback(this)
     }
 
     fun startPlay() {
@@ -32,7 +37,7 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     }
 
     override fun onViewSizeChanged(width: Int, height: Int) {
-        logD("onViewSurfaceAvailable: width = $width, height = $height")
+        logD("onViewSizeChanged: width = $width, height = $height")
     }
 
     override fun onViewSurfaceAvailable(surfaceTexture: SurfaceTexture) {
@@ -42,4 +47,34 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     override fun onViewSurfaceDestroyed() {
         logD("onViewSurfaceDestroyed")
     }
+
+    override fun onPlayerCreated() {
+        mInterceptors.forEach {
+            if (it.doIntercept(InterceptorConst.PLAYER_CREATE, this)) {
+                return
+            }
+        }
+        repo.startLoad()
+    }
+
+    override fun onDataReceived(info: VideoInfo) {
+        when (info.brief) {
+
+
+            //todo
+            VideoInfo.BRIEF_SOURCE -> handleVideoSourceReceived(info)
+        }
+    }
+
+
+    protected fun handleVideoSourceReceived(info: VideoInfo) {
+        mInterceptors.forEach {
+            if (it.doIntercept(InterceptorConst.VIDEO_SOURCE_RECEIVED, this)) {
+                return
+            }
+        }
+        mStateMachine.post(MsgPrepare(info))
+    }
+
+    fun getCurrentVideoInfo() = repo.getVideoInfo()
 }

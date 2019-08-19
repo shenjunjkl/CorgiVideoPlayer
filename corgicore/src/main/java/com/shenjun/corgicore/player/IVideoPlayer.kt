@@ -15,6 +15,8 @@ interface IVideoPlayer {
 
     interface IPlayerCallback {
 
+        fun onPlayerCreated()
+
     }
 
     interface IPlayerProvider {

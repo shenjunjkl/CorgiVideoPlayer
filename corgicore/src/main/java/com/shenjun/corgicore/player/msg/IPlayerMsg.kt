@@ -9,7 +9,9 @@ import com.shenjun.corgicore.player.PlayerStateMachine
  */
 interface IPlayerMsg {
 
-    fun what() = javaClass.simpleName.hashCode()
+    fun what() = name().hashCode()
+
+    fun name(): String = javaClass.simpleName
 
     fun transferState(fromState: PlayerState, player: IVideoPlayer?, machine: PlayerStateMachine): PlayerState
 }

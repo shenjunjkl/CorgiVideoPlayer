@@ -22,6 +22,7 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
         ijkPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
         ijkPlayer.setScreenOnWhilePlaying(true)
         mPlayer = ijkPlayer
+        mCallbacks.forEach { it.onPlayerCreated() }
     }
 
     override fun release() {

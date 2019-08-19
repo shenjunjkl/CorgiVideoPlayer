@@ -34,7 +34,7 @@ class PlayerStateMachine {
 
         override fun handleMessage(msg: Message?) {
             val obj = msg?.obj as? IPlayerMsg ?: return
-            logD("handle msg: ${obj.what()}")
+            logD("handle msg = ${obj.name()}")
             mRef.get()?.apply {
                 mCurrentState = obj.transferState(mCurrentState, mVideoPlayerImpl, this)
             }
