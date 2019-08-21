@@ -24,4 +24,10 @@ fun Any.logW(msg: String) {
     }
 }
 
+fun Any.logE(msg: String) {
+    if (CorgiLog.DEBUG) {
+        Log.e(createTag(), msg)
+    }
+}
+
 private fun Any.createTag() = "Corgi#${javaClass.simpleName}"

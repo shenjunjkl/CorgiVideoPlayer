@@ -1,22 +1,23 @@
 package com.shenjun.corgicore.player.msg
 
-import com.shenjun.corgicore.data.VideoInfo
+import android.graphics.SurfaceTexture
 import com.shenjun.corgicore.player.IVideoPlayer
 import com.shenjun.corgicore.player.PlayerState
 import com.shenjun.corgicore.player.PlayerStateMachine
 
 /**
- * Created by shenjun on 2019-08-15.
+ * Created by shenjun on 2019-08-22.
  */
-class MsgPrepare(private val info: VideoInfo) : IPlayerMsg {
+class MsgUpdateSurface(private val surfaceTexture: SurfaceTexture): IPlayerMsg {
 
     override fun transferState(fromState: PlayerState, player: IVideoPlayer?, machine: PlayerStateMachine): PlayerState {
         when (fromState) {
-            PlayerState.INIT -> {
-                player?.prepare(info)
+            PlayerState.IDLE -> {
             }
-            else -> return fromState
+            else -> {
+                player?.updateSurface(surfaceTexture)
+            }
         }
-        return PlayerState.PREPARING
+        return fromState
     }
 }

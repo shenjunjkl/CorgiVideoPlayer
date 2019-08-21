@@ -12,16 +12,23 @@ import java.lang.ref.WeakReference
 class PlayerStateMachine {
 
     private var mCurrentState = PlayerState.IDLE
-
     private var mVideoPlayerImpl: IVideoPlayer? = null
-
     private val mHandler = MediaMsgHandler(this)
 
-    fun post(playerMsg: IPlayerMsg) {
+    var startAfterPrepared = false
+
+    fun post(playerMsg: IPlayerMsg, removeOld: Boolean = false) {
+        if (removeOld) {
+            remove(playerMsg)
+        }
         val message = Message()
         message.what = playerMsg.what()
         message.obj = playerMsg
         mHandler.sendMessage(message)
+    }
+
+    fun remove(playerMsg: IPlayerMsg) {
+        mHandler.removeMessages(playerMsg.what())
     }
 
     fun setVideoPlayerInstance(player: IVideoPlayer) {

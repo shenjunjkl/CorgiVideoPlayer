@@ -5,10 +5,10 @@ import com.shenjun.corgicore.callback.VideoViewCallback
 import com.shenjun.corgicore.constant.InterceptorConst
 import com.shenjun.corgicore.data.VideoInfo
 import com.shenjun.corgicore.log.logD
+import com.shenjun.corgicore.log.logE
 import com.shenjun.corgicore.player.IVideoPlayer
 import com.shenjun.corgicore.player.PlayerStateMachine
-import com.shenjun.corgicore.player.msg.MsgInit
-import com.shenjun.corgicore.player.msg.MsgPrepare
+import com.shenjun.corgicore.player.msg.*
 import com.shenjun.corgicore.view.ControllerVideoView
 
 /**
@@ -42,6 +42,8 @@ open class VideoBridge<out P : AbstractVideoRepo>(
 
     override fun onViewSurfaceAvailable(surfaceTexture: SurfaceTexture) {
         logD("onViewSurfaceAvailable: $surfaceTexture")
+        mStateMachine.post(MsgUpdateSurface(surfaceTexture), true)
+        mStateMachine.post(MsgStart(), true)
     }
 
     override fun onViewSurfaceDestroyed() {
@@ -55,6 +57,18 @@ open class VideoBridge<out P : AbstractVideoRepo>(
             }
         }
         repo.startLoad()
+    }
+
+    override fun onPlayerPrepareStart() {
+        // todo
+    }
+
+    override fun onPlayerPrepared() {
+        mStateMachine.post(MsgPrepared())
+    }
+
+    override fun onPlayerError(errorCode: Int, msg: String) {
+        logE("player error $errorCode, msg = $msg")
     }
 
     override fun onDataReceived(info: VideoInfo) {
