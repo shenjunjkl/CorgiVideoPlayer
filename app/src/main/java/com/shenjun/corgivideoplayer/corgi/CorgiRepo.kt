@@ -10,7 +10,7 @@ import com.shenjun.corgivideoplayer.DemoVideoUrl
 class CorgiRepo : AbstractVideoRepo() {
 
     override fun startLoad() {
-        mVideoInfo.url = DemoVideoUrl.MP4_4
+        mVideoInfo.url = DemoVideoUrl.LOCAL_MP4_1
         mVideoInfo.brief = VideoInfo.BRIEF_SOURCE
         notifyVideoInfoChanged()
     }

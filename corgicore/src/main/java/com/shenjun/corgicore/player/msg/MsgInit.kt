@@ -21,7 +21,7 @@ class MsgInit(private val config: VideoConfig, private val callback: IVideoPlaye
         }
         val p = config.createVideoPlayer()
         machine.setVideoPlayerInstance(p)
-        p.registerCallback(callback)
+        p.setPlayerCallback(callback)
         p.create()
         return PlayerState.INIT
     }

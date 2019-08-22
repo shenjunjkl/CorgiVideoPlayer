@@ -1,5 +1,6 @@
 package com.shenjun.corgicore.player
 
+import android.content.Context
 import android.graphics.SurfaceTexture
 import com.shenjun.corgicore.data.VideoInfo
 
@@ -24,11 +25,11 @@ interface IVideoPlayer {
 
     fun updateSurface(surfaceTexture: SurfaceTexture)
 
-    fun registerCallback(callback: IPlayerCallback)
-
-    fun unregisterCallback(callback: IPlayerCallback)
+    fun setPlayerCallback(callback: IPlayerCallback)
 
     interface IPlayerCallback {
+
+        fun getContext(): Context
 
         fun onPlayerCreated()
 

@@ -8,6 +8,10 @@ import com.shenjun.corgicore.player.IVideoPlayer
  * Created by shenjun on 2019-08-14.
  */
 class SystemVideoPlayer : IVideoPlayer{
+    override fun setPlayerCallback(callback: IVideoPlayer.IPlayerCallback) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun prepare(info: VideoInfo) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -37,14 +41,6 @@ class SystemVideoPlayer : IVideoPlayer{
     }
 
     override fun release() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun registerCallback(callback: IVideoPlayer.IPlayerCallback) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun unregisterCallback(callback: IVideoPlayer.IPlayerCallback) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

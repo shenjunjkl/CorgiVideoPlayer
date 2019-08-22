@@ -1,5 +1,6 @@
 package com.shenjun.corgicore.framework
 
+import android.content.Context
 import android.graphics.SurfaceTexture
 import com.shenjun.corgicore.callback.VideoViewCallback
 import com.shenjun.corgicore.constant.InterceptorConst
@@ -48,6 +49,10 @@ open class VideoBridge<out P : AbstractVideoRepo>(
 
     override fun onViewSurfaceDestroyed() {
         logD("onViewSurfaceDestroyed")
+    }
+
+    override fun getContext(): Context {
+        return videoView.context
     }
 
     override fun onPlayerCreated() {

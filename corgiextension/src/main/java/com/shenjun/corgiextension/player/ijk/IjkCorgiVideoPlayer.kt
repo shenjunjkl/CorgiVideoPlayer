@@ -19,7 +19,7 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
 
     private var mPlayer: IjkMediaPlayer? = null
     private val mEventMapper = IjkPlayerEventMapper()
-    private var mCallbacks = mutableSetOf<IVideoPlayer.IPlayerCallback>()
+    private var mCallback: IVideoPlayer.IPlayerCallback? = null
     private var mSurface: Surface? = null
     private var mSurfaceTexture: SurfaceTexture? = null
 
@@ -29,11 +29,11 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
         ijkPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
         ijkPlayer.setScreenOnWhilePlaying(true)
         mPlayer = ijkPlayer
-        mCallbacks.forEach { it.onPlayerCreated() }
+        mCallback?.onPlayerCreated()
     }
 
     override fun prepare(info: VideoInfo) {
-        mCallbacks.forEach { it.onPlayerPrepareStart() }
+        mCallback?.onPlayerPrepareStart()
         try {
             mPlayer?.apply {
                 setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "safe", 0)
@@ -44,16 +44,12 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
                 if (!TextUtils.isEmpty(ua)) {
                     setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", ua)
                 }
-                if (headers.isEmpty()) {
-                    dataSource = info.url
-                } else {
-                    setDataSource(info.url, headers)
-                }
+                setPlayDataSource(info.url, headers)
                 prepareAsync()
             }
         } catch (e: Exception) {
             logW("ijkPlayer prepare failed, exception = $e")
-            mCallbacks.forEach { it.onPlayerError(VideoErrorConst.PLAYER_PREPARE_FAILED, e.toString()) }
+            mCallback?.onPlayerError(VideoErrorConst.PLAYER_PREPARE_FAILED, e.toString())
         }
     }
 
@@ -99,12 +95,27 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
         }
     }
 
-    override fun registerCallback(callback: IVideoPlayer.IPlayerCallback) {
-        mCallbacks.add(callback)
+    override fun setPlayerCallback(callback: IVideoPlayer.IPlayerCallback) {
+        mCallback = callback
     }
 
-    override fun unregisterCallback(callback: IVideoPlayer.IPlayerCallback) {
-        mCallbacks.remove(callback)
+    private fun IjkMediaPlayer.setPlayDataSource(path: String, headers: Map<String, String>?= null) {
+        when {
+            path.startsWith("assets://") -> {
+                val fileName = path.substring("assets://".length, path.length)
+                val fd = mCallback?.getContext()?.assets?.openFd(fileName)
+                if (fd != null) {
+                    setDataSource(IjkAssetsDataSource(fd))
+                }
+            }
+            else -> {
+                if (headers == null || headers.isEmpty()) {
+                    dataSource = path
+                } else {
+                    setDataSource(path, headers)
+                }
+            }
+        }
     }
 
     private fun IjkMediaPlayer.setEventMapper(mapper: IjkPlayerEventMapper?) {
@@ -123,14 +134,14 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
         }
 
         override fun onPrepared(player: IMediaPlayer?) {
-            mCallbacks.forEach { it.onPlayerPrepared() }
+            mCallback?.onPlayerPrepared()
         }
 
         override fun onCompletion(player: IMediaPlayer?) {
         }
 
         override fun onError(player: IMediaPlayer?, what: Int, extra: Int): Boolean {
-            mCallbacks.forEach { it.onPlayerError(VideoErrorConst.PLAYER_INNER_ERROR, "$what, $extra") }
+            mCallback?.onPlayerError(VideoErrorConst.PLAYER_INNER_ERROR, "$what, $extra")
             return false
         }
 
