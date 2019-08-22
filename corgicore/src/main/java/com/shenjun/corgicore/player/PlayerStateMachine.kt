@@ -31,7 +31,7 @@ class PlayerStateMachine {
         mHandler.removeMessages(playerMsg.what())
     }
 
-    fun setVideoPlayerInstance(player: IVideoPlayer) {
+    fun setVideoPlayerInstance(player: IVideoPlayer?) {
         mVideoPlayerImpl = player
     }
 
@@ -41,9 +41,10 @@ class PlayerStateMachine {
 
         override fun handleMessage(msg: Message?) {
             val obj = msg?.obj as? IPlayerMsg ?: return
-            logD("handle msg = ${obj.name()}")
             mRef.get()?.apply {
+                val oldState = mCurrentState
                 mCurrentState = obj.transferState(mCurrentState, mVideoPlayerImpl, this)
+                logD("handle msg = ${obj.name()}, state $oldState -> $mCurrentState")
             }
         }
     }

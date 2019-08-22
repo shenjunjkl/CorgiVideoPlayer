@@ -95,5 +95,17 @@ open class VideoBridge<out P : AbstractVideoRepo>(
         mStateMachine.post(MsgPrepare(info))
     }
 
+    fun pause() {
+        mStateMachine.post(MsgPause())
+    }
+
+    fun resume() {
+        mStateMachine.post(MsgStart())
+    }
+
+    fun release() {
+        mStateMachine.post(MsgRelease())
+    }
+
     fun getCurrentVideoInfo() = repo.getVideoInfo()
 }
