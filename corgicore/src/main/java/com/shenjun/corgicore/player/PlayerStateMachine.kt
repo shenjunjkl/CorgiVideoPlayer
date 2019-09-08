@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Message
 import com.shenjun.corgicore.log.logD
 import com.shenjun.corgicore.player.msg.IPlayerMsg
+import com.shenjun.corgicore.tools.name
 import java.lang.ref.WeakReference
 
 /**
@@ -33,6 +34,14 @@ class PlayerStateMachine {
 
     fun setVideoPlayerInstance(player: IVideoPlayer?) {
         mVideoPlayerImpl = player
+    }
+
+    fun getProgress(): Long {
+        return mVideoPlayerImpl?.getProgress() ?: 0
+    }
+
+    fun getDuration(): Long {
+        return mVideoPlayerImpl?.getDuration() ?: -1
     }
 
     private class MediaMsgHandler(stateMachine: PlayerStateMachine) : Handler() {

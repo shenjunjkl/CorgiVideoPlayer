@@ -27,6 +27,10 @@ interface IVideoPlayer {
 
     fun setPlayerCallback(callback: IPlayerCallback)
 
+    fun getProgress(): Long
+
+    fun getDuration(): Long
+
     interface IPlayerCallback {
 
         fun getContext(): Context

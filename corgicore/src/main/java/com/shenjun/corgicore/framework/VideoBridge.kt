@@ -2,6 +2,7 @@ package com.shenjun.corgicore.framework
 
 import android.content.Context
 import android.graphics.SurfaceTexture
+import android.os.Handler
 import com.shenjun.corgicore.callback.VideoViewCallback
 import com.shenjun.corgicore.constant.InterceptorConst
 import com.shenjun.corgicore.data.VideoInfo
@@ -21,8 +22,19 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     private val videoConfig: VideoConfig = VideoConfig()
 ) : VideoViewCallback, IVideoPlayer.IPlayerCallback, AbstractVideoRepo.RepoCallback {
 
+
     private val mStateMachine = PlayerStateMachine()
     private val mInterceptors = mutableListOf<VideoInterceptor>()
+
+    private val mHandler = Handler()
+    private val mUpdateTimeThread = object : Runnable {
+        override fun run() {
+            if (canUpdateTime()) {
+                getProgressAndUpdateView()
+            }
+            mHandler.postDelayed(this, progressUpdateIntervalMs())
+        }
+    }
 
     init {
         initVideoBridge()
@@ -69,7 +81,9 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     }
 
     override fun onPlayerPrepared() {
+        videoView.setDuration(mStateMachine.getDuration())
         mStateMachine.post(MsgPrepared())
+        updateTimeThread(true)
     }
 
     override fun onPlayerError(errorCode: Int, msg: String) {
@@ -108,4 +122,22 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     }
 
     fun getCurrentVideoInfo() = repo.getVideoInfo()
+
+    protected fun progressUpdateIntervalMs() = 100L
+
+    private fun canUpdateTime(): Boolean {
+        return true
+    }
+
+    protected fun getProgressAndUpdateView() {
+        val progress = mStateMachine.getProgress()
+        videoView.setCurrentProgress(progress)
+    }
+
+    private fun updateTimeThread(isWorking: Boolean) {
+        mHandler.removeCallbacks(mUpdateTimeThread)
+        if (isWorking) {
+            mHandler.postDelayed(mUpdateTimeThread, progressUpdateIntervalMs())
+        }
+    }
 }

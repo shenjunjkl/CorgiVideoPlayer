@@ -2,6 +2,7 @@ package com.shenjun.corgicore.log
 
 import android.util.Log
 import com.shenjun.corgicore.BuildConfig
+import com.shenjun.corgicore.tools.name
 
 /**
  * Created by shenjun on 2019/1/10.
@@ -30,4 +31,4 @@ fun Any.logE(msg: String) {
     }
 }
 
-private fun Any.createTag() = "Corgi#${javaClass.simpleName}"
+private fun Any.createTag() = "Corgi#${name()}"

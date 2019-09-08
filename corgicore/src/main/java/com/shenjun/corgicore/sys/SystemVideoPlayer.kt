@@ -8,6 +8,14 @@ import com.shenjun.corgicore.player.IVideoPlayer
  * Created by shenjun on 2019-08-14.
  */
 class SystemVideoPlayer : IVideoPlayer{
+    override fun getProgress(): Long {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getDuration(): Long {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun setPlayerCallback(callback: IVideoPlayer.IPlayerCallback) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

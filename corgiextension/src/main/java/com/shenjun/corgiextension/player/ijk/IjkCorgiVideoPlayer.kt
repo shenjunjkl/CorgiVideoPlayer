@@ -99,6 +99,14 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
         mCallback = callback
     }
 
+    override fun getProgress(): Long {
+        return mPlayer?.currentPosition ?: 0
+    }
+
+    override fun getDuration(): Long {
+        return mPlayer?.duration ?: -1
+    }
+
     private fun IjkMediaPlayer.setPlayDataSource(path: String, headers: Map<String, String>?= null) {
         when {
             path.startsWith("assets://") -> {
