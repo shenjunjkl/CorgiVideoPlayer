@@ -42,6 +42,11 @@ interface IVideoPlayer {
         fun onPlayerPrepared()
 
         fun onPlayerError(errorCode: Int, msg: String)
+
+        /**
+         * called when video buffering size is updated, percent ranges from 0f to 1f
+         */
+        fun onBufferingUpdate(percent: Float)
     }
 
     interface IPlayerProvider {

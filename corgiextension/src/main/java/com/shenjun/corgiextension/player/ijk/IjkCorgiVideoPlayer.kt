@@ -107,7 +107,7 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
         return mPlayer?.duration ?: -1
     }
 
-    private fun IjkMediaPlayer.setPlayDataSource(path: String, headers: Map<String, String>?= null) {
+    private fun IjkMediaPlayer.setPlayDataSource(path: String, headers: Map<String, String>? = null) {
         when {
             path.startsWith("assets://") -> {
                 val fileName = path.substring("assets://".length, path.length)
@@ -138,7 +138,9 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
     private inner class IjkPlayerEventMapper : IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnPreparedListener,
         IMediaPlayer.OnCompletionListener, IMediaPlayer.OnErrorListener,
         IMediaPlayer.OnVideoSizeChangedListener, IMediaPlayer.OnInfoListener {
-        override fun onBufferingUpdate(player: IMediaPlayer?, p1: Int) {
+        override fun onBufferingUpdate(player: IMediaPlayer?, percent: Int) {
+            // percent range 0-100
+            mCallback?.onBufferingUpdate(percent / 100f)
         }
 
         override fun onPrepared(player: IMediaPlayer?) {

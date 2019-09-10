@@ -51,6 +51,12 @@ open class ControllerVideoView(
         }
     }
 
+    fun setBufferingPercent(percent: Float) {
+        findAllControllerImpl<ProgressListener> {
+            it.onBufferProgressUpdate(percent)
+        }
+    }
+
     private fun removeController(key: String) {
         val pair = mControllersMap[key]
         val controller = pair?.first

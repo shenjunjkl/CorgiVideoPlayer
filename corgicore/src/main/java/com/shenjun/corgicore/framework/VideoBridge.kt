@@ -90,6 +90,10 @@ open class VideoBridge<out P : AbstractVideoRepo>(
         logE("player error $errorCode, msg = $msg")
     }
 
+    override fun onBufferingUpdate(percent: Float) {
+        videoView.setBufferingPercent(percent)
+    }
+
     override fun onDataReceived(info: VideoInfo) {
         when (info.brief) {
 

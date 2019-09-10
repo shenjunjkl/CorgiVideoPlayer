@@ -13,7 +13,7 @@ class DemoVideoUrl {
         const val MP4_4 = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
 
         const val LOCAL_MP4_1 = "assets://v1.mp4"
-        const val LOCAL_MP4_2 = "assets://v1.mp4"
+        const val LOCAL_MP4_2 = "assets://v2.mp4"
     }
 
 }
