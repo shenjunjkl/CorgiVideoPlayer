@@ -8,6 +8,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.*
 import com.shenjun.corgicore.tools.time2MediaLength
 import com.shenjun.corgicore.view.controller.AbstractVideoController
+import com.shenjun.corgicore.view.listener.PlayPauseListener
 import com.shenjun.corgicore.view.listener.ProgressListener
 import com.shenjun.corgivideoplayer.R
 import com.shenjun.corgivideoplayer.dp2px
@@ -15,7 +16,7 @@ import com.shenjun.corgivideoplayer.dp2px
 /**
  * Created by shenjun on 2019-08-28.
  */
-class CorgiFullscreenBottomController : AbstractVideoController(), ProgressListener, View.OnClickListener {
+class CorgiFullscreenBottomController : AbstractVideoController(), ProgressListener, PlayPauseListener, View.OnClickListener {
 
     private lateinit var mPauseIV: ImageView
     private lateinit var mProgressTV: TextView
@@ -74,6 +75,11 @@ class CorgiFullscreenBottomController : AbstractVideoController(), ProgressListe
         if (durationMs <= 0) return
         mSavedDuration = durationMs
         mDurationTV.text = time2MediaLength(durationMs)
+    }
+
+    override fun onPlayPauseStateChanged(isPlaying: Boolean) {
+        val res = if (isPlaying) android.R.drawable.ic_media_pause else android.R.drawable.ic_media_play
+        mPauseIV.setImageResource(res)
     }
 
     override fun onClick(v: View?) {

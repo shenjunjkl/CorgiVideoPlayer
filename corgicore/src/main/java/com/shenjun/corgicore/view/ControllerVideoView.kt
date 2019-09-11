@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.shenjun.corgicore.constant.ControllerConst
 import com.shenjun.corgicore.view.controller.AbstractVideoController
+import com.shenjun.corgicore.view.listener.PlayPauseListener
 import com.shenjun.corgicore.view.listener.ProgressListener
 
 /**
@@ -65,7 +66,9 @@ open class ControllerVideoView(
     }
 
     fun setPlayPauseState(isPlaying: Boolean) {
-
+        findAllControllerImpl<PlayPauseListener> {
+            it.onPlayPauseStateChanged(isPlaying)
+        }
     }
 
     private fun removeController(key: String) {

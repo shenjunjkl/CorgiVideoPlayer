@@ -43,6 +43,8 @@ interface IVideoPlayer {
 
         fun onPlayerError(errorCode: Int, msg: String)
 
+        fun onPlayerPlayPauseStateChanged(isPlaying: Boolean)
+
         /**
          * called when video buffering size is updated, percent ranges from 0f to 1f
          */

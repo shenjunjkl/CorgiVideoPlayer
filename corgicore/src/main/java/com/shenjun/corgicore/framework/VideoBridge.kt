@@ -100,6 +100,10 @@ open class VideoBridge<out P : AbstractVideoRepo>(
         logE("player error $errorCode, msg = $msg")
     }
 
+    override fun onPlayerPlayPauseStateChanged(isPlaying: Boolean) {
+        videoView.setPlayPauseState(isPlaying)
+    }
+
     override fun onBufferingUpdate(percent: Float) {
         videoView.setBufferingPercent(percent)
     }

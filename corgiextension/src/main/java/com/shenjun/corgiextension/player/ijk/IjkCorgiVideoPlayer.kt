@@ -59,10 +59,12 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
 
     override fun start() {
         mPlayer?.start()
+        mCallback?.onPlayerPlayPauseStateChanged(true)
     }
 
     override fun pause() {
         mPlayer?.pause()
+        mCallback?.onPlayerPlayPauseStateChanged(false)
     }
 
     override fun seekTo(timeMs: Long) {
