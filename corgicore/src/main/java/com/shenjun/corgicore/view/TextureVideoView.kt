@@ -23,7 +23,11 @@ open class TextureVideoView(
 
     private val mTextureView = TextureView(context)
     private var mSurface: SurfaceTexture? = null
-    protected var mVideoViewCallback: VideoViewCallback? = null
+    var videoViewCallback: VideoViewCallback? = null
+        set(value) {
+            field = value
+            mSurface?.let { value?.onViewSurfaceAvailable(it) }
+        }
 
     init {
         initTextureView()
@@ -42,7 +46,7 @@ open class TextureVideoView(
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
         surface?.let {
             mSurface = it
-            mVideoViewCallback?.onViewSurfaceAvailable(surface)
+            videoViewCallback?.onViewSurfaceAvailable(surface)
         }
     }
 
@@ -50,7 +54,7 @@ open class TextureVideoView(
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
         mSurface = null
-        mVideoViewCallback?.onViewSurfaceDestroyed()
+        videoViewCallback?.onViewSurfaceDestroyed()
         return false
     }
 
@@ -58,13 +62,6 @@ open class TextureVideoView(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        mVideoViewCallback?.onViewSizeChanged(w, h)
-    }
-
-    fun setVideoViewCallback(callback: VideoViewCallback) {
-        mVideoViewCallback = callback
-        mSurface?.let {
-            callback.onViewSurfaceAvailable(it)
-        }
+        videoViewCallback?.onViewSizeChanged(w, h)
     }
 }

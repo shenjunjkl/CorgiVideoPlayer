@@ -12,4 +12,8 @@ interface VideoViewCallback {
     fun onViewSurfaceAvailable(surfaceTexture: SurfaceTexture)
 
     fun onViewSurfaceDestroyed()
+
+    fun onOperateReversePlayState()
+
+
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
+import com.shenjun.corgicore.constant.ControllerConst
 import com.shenjun.corgicore.view.controller.AbstractVideoController
 import com.shenjun.corgicore.view.listener.ProgressListener
 
@@ -27,7 +28,12 @@ open class ControllerVideoView(
     }
 
     override fun onControllerEvent(event: Int, extra: Bundle) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        when (event) {
+            ControllerConst.REVERSE_PLAY_STATE -> {
+                videoViewCallback?.onOperateReversePlayState()
+            }
+
+        }
     }
 
     fun setController(controller: AbstractVideoController) {
@@ -37,6 +43,7 @@ open class ControllerVideoView(
         addView(view)
         controller.eventCallback = this
         mControllersMap[key] = controller to view
+        controller.onViewCreated(view)
     }
 
     fun setCurrentProgress(timeMs: Long) {
@@ -55,6 +62,10 @@ open class ControllerVideoView(
         findAllControllerImpl<ProgressListener> {
             it.onBufferProgressUpdate(percent)
         }
+    }
+
+    fun setPlayPauseState(isPlaying: Boolean) {
+
     }
 
     private fun removeController(key: String) {

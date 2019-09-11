@@ -1,5 +1,6 @@
 package com.shenjun.corgicore.player.msg
 
+import com.shenjun.corgicore.constant.PlayerConst
 import com.shenjun.corgicore.player.IVideoPlayer
 import com.shenjun.corgicore.player.PlayerState
 import com.shenjun.corgicore.player.PlayerStateMachine
@@ -13,7 +14,7 @@ class MsgPrepared: IPlayerMsg {
         when (fromState) {
             PlayerState.PREPARING -> {
                 if (machine.startAfterPrepared) {
-                    return MsgStart().transferState(PlayerState.PREPARED, player, machine)
+                    return MsgStart(PlayerConst.PRIORITY_SOURCE_AVAILABLE).transferState(PlayerState.PREPARED, player, machine)
                 }
             }
             else -> return fromState

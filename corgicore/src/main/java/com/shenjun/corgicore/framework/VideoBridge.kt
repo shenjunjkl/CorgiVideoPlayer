@@ -5,6 +5,7 @@ import android.graphics.SurfaceTexture
 import android.os.Handler
 import com.shenjun.corgicore.callback.VideoViewCallback
 import com.shenjun.corgicore.constant.InterceptorConst
+import com.shenjun.corgicore.constant.PlayerConst
 import com.shenjun.corgicore.data.VideoInfo
 import com.shenjun.corgicore.log.logD
 import com.shenjun.corgicore.log.logE
@@ -41,7 +42,7 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     }
 
     private fun initVideoBridge() {
-        videoView.setVideoViewCallback(this)
+        videoView.videoViewCallback = this
         repo.setRepoCallback(this)
     }
 
@@ -56,11 +57,20 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     override fun onViewSurfaceAvailable(surfaceTexture: SurfaceTexture) {
         logD("onViewSurfaceAvailable: $surfaceTexture")
         mStateMachine.post(MsgUpdateSurface(surfaceTexture), true)
-        mStateMachine.post(MsgStart(), true)
+        mStateMachine.post(MsgStart(PlayerConst.PRIORITY_SOURCE_AVAILABLE), true)
     }
 
     override fun onViewSurfaceDestroyed() {
         logD("onViewSurfaceDestroyed")
+    }
+
+    override fun onOperateReversePlayState() {
+        val msg = if (mStateMachine.isPlaying()) {
+            MsgPause(PlayerConst.PRIORITY_USER)
+        } else {
+            MsgStart(PlayerConst.PRIORITY_USER)
+        }
+        mStateMachine.post(msg)
     }
 
     override fun getContext(): Context {
@@ -114,11 +124,11 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     }
 
     fun pause() {
-        mStateMachine.post(MsgPause())
+        mStateMachine.post(MsgPause(PlayerConst.PRIORITY_BACKGROUND))
     }
 
     fun resume() {
-        mStateMachine.post(MsgStart())
+        mStateMachine.post(MsgStart(PlayerConst.PRIORITY_BACKGROUND))
     }
 
     fun release() {
@@ -126,6 +136,7 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     }
 
     fun getCurrentVideoInfo() = repo.getVideoInfo()
+
 
     protected fun progressUpdateIntervalMs() = 100L
 
