@@ -10,6 +10,10 @@ class VideoConfig : IVideoPlayer.IPlayerProvider {
 
     var playerProvider: IVideoPlayer.IPlayerProvider? = null
 
+    //todo handle true case
+    var doSeekToWhileSeeking = false
+
+
     override fun createVideoPlayer(): IVideoPlayer {
         val p = playerProvider ?: SystemPlayerProvider().apply { playerProvider = this }
         return p.createVideoPlayer()

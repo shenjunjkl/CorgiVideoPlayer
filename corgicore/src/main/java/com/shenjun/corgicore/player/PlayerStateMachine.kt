@@ -34,6 +34,11 @@ class PlayerStateMachine {
         mHandler.removeMessages(playerMsg.what())
     }
 
+    fun postNewest(playerMsg: IPlayerMsg) {
+        remove(playerMsg)
+        post(playerMsg)
+    }
+
     fun setVideoPlayerInstance(player: IVideoPlayer?) {
         mVideoPlayerImpl = player
     }

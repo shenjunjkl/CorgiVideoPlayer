@@ -73,6 +73,16 @@ open class VideoBridge<out P : AbstractVideoRepo>(
         mStateMachine.post(msg)
     }
 
+    override fun onOperateSeeking(startTimeMs: Long, curTimeMs: Long) {
+        if (videoConfig.doSeekToWhileSeeking) {
+            mStateMachine.postNewest(MsgSeek(curTimeMs))
+        }
+    }
+
+    override fun onOperateSeekEnd(timeMs: Long) {
+        mStateMachine.postNewest(MsgSeek(timeMs))
+    }
+
     override fun getContext(): Context {
         return videoView.context
     }

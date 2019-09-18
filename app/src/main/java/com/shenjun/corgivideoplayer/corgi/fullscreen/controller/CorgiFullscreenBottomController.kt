@@ -12,6 +12,8 @@ import com.shenjun.corgicore.view.listener.PlayPauseListener
 import com.shenjun.corgicore.view.listener.ProgressListener
 import com.shenjun.corgivideoplayer.R
 import com.shenjun.corgivideoplayer.dp2px
+import com.shenjun.corgivideoplayer.getTimeMs
+import com.shenjun.corgivideoplayer.setProgressForVideo
 
 /**
  * Created by shenjun on 2019-08-28.
@@ -47,15 +49,19 @@ class CorgiFullscreenBottomController : AbstractVideoController(), ProgressListe
 
         mSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                // todo
+                if (!fromUser) return
+                val time = seekBar?.getTimeMs(mSavedDuration) ?: return
+                eventCallback?.seeking(time)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                //todo
+                val time = seekBar?.getTimeMs(mSavedDuration) ?: return
+                eventCallback?.seekStart(time)
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                //todo
+                val time = seekBar?.getTimeMs(mSavedDuration) ?: return
+                eventCallback?.seekEnd(time)
             }
         })
     }
@@ -63,8 +69,7 @@ class CorgiFullscreenBottomController : AbstractVideoController(), ProgressListe
     override fun onProgressUpdate(timeMs: Long) {
         if (timeMs < 0) return
         mProgressTV.text = time2MediaLength(timeMs)
-        if (mSavedDuration <= 0) return
-        mSeekBar.progress = (timeMs * mSeekBar.max / mSavedDuration).toInt()
+        mSeekBar.setProgressForVideo(timeMs, mSavedDuration)
     }
 
     override fun onBufferProgressUpdate(percent: Float) {

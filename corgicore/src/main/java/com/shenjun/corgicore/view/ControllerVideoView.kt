@@ -19,6 +19,7 @@ open class ControllerVideoView(
 ) : TextureVideoView(context, attrs, defStyleAttr), AbstractVideoController.EventCallback {
 
     private val mControllersMap: MutableMap<String, Pair<AbstractVideoController, View>> = mutableMapOf()
+    private var seekStartTimeMs = 0L
 
     init {
         initControllerView()
@@ -32,6 +33,20 @@ open class ControllerVideoView(
         when (event) {
             ControllerConst.REVERSE_PLAY_STATE -> {
                 videoViewCallback?.onOperateReversePlayState()
+            }
+            ControllerConst.SEEK_START -> {
+                //todo do not hide controller
+                seekStartTimeMs = extra.getLong(ControllerConst.KEY_TIME_MS)
+            }
+            ControllerConst.SEEKING -> {
+                //todo do not hide controller
+                val time = extra.getLong(ControllerConst.KEY_TIME_MS)
+                videoViewCallback?.onOperateSeeking(seekStartTimeMs, time)
+            }
+            ControllerConst.SEEK_END -> {
+                //todo hide controller count down start
+                val time = extra.getLong(ControllerConst.KEY_TIME_MS)
+                videoViewCallback?.onOperateSeekEnd(time)
             }
 
         }

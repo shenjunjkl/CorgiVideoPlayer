@@ -41,15 +41,21 @@ abstract class AbstractVideoController {
         onControllerEvent(ControllerConst.REVERSE_PLAY_STATE, Bundle())
     }
 
-    fun EventCallback.seekStart() {
-        //todo
+    fun EventCallback.seekStart(timeMs: Long) {
+        onControllerEvent(ControllerConst.SEEK_START, Bundle().apply {
+            putLong(ControllerConst.KEY_TIME_MS, timeMs)
+        })
     }
 
-    fun EventCallback.seeking() {
-        //todo
+    fun EventCallback.seeking(timeMs: Long) {
+        onControllerEvent(ControllerConst.SEEKING, Bundle().apply {
+            putLong(ControllerConst.KEY_TIME_MS, timeMs)
+        })
     }
 
-    fun EventCallback.seekEnd() {
-        //todo
+    fun EventCallback.seekEnd(timeMs: Long) {
+        onControllerEvent(ControllerConst.SEEK_END, Bundle().apply {
+            putLong(ControllerConst.KEY_TIME_MS, timeMs)
+        })
     }
 }
