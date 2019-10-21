@@ -37,6 +37,7 @@ open class ControllerVideoView(
             ControllerConst.SEEK_START -> {
                 //todo do not hide controller
                 seekStartTimeMs = extra.getLong(ControllerConst.KEY_TIME_MS)
+                videoViewCallback?.onOperateSeekStart(seekStartTimeMs)
             }
             ControllerConst.SEEKING -> {
                 //todo do not hide controller

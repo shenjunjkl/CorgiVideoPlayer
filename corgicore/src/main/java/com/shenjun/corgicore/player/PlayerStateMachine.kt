@@ -49,6 +49,8 @@ class PlayerStateMachine {
 
     fun isPlaying(): Boolean = mVideoPlayerImpl?.isPlaying() ?: false
 
+    fun isMute(): Boolean = mVideoPlayerImpl?.isMute() ?: false
+
     private class MediaMsgHandler(stateMachine: PlayerStateMachine) : Handler() {
 
         private val mRef = WeakReference(stateMachine)

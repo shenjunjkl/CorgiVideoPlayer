@@ -23,6 +23,10 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
     private var mSurface: Surface? = null
     private var mSurfaceTexture: SurfaceTexture? = null
 
+    private var mVolumeLeft = 1f
+    private var mVolumeRight = 1f
+    private var mPlayerMute = false
+
     override fun create() {
         val ijkPlayer = IjkMediaPlayer()
         ijkPlayer.setEventMapper(mEventMapper)
@@ -108,6 +112,23 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
     override fun getDuration(): Long {
         return mPlayer?.duration ?: -1
     }
+
+    override fun setVolume(volumeLeft: Float, volumeRight: Float) {
+        mVolumeLeft = volumeLeft
+        mVolumeRight = volumeRight
+        mPlayer?.setVolume(volumeLeft, volumeRight)
+    }
+
+    override fun setMute(mute: Boolean) {
+        mPlayerMute = mute
+        if (mute) {
+            mPlayer?.setVolume(0f, 0f)
+        } else {
+            mPlayer?.setVolume(mVolumeLeft, mVolumeRight)
+        }
+    }
+
+    override fun isMute(): Boolean = mPlayerMute
 
     private fun IjkMediaPlayer.setPlayDataSource(path: String, headers: Map<String, String>? = null) {
         when {

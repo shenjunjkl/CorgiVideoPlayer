@@ -15,6 +15,8 @@ interface VideoViewCallback {
 
     fun onOperateReversePlayState()
 
+    fun onOperateSeekStart(startTimeMs: Long)
+
     fun onOperateSeeking(startTimeMs: Long, curTimeMs: Long)
 
     fun onOperateSeekEnd(timeMs: Long)

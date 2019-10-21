@@ -26,6 +26,7 @@ open class VideoBridge<out P : AbstractVideoRepo>(
 
     private val mStateMachine = PlayerStateMachine()
     private val mInterceptors = mutableListOf<VideoInterceptor>()
+    private val mStateRecorder = VideoStateRecorder()
 
     private val mHandler = Handler()
     private val mUpdateTimeThread = object : Runnable {
@@ -73,14 +74,24 @@ open class VideoBridge<out P : AbstractVideoRepo>(
         mStateMachine.post(msg)
     }
 
+    override fun onOperateSeekStart(startTimeMs: Long) {
+        mStateRecorder.isMuteBeforeSeeking = mStateMachine.isMute()
+        if (videoConfig.muteDuringSeeking) {
+            mStateMachine.post(MsgMute(true))
+        }
+    }
+
     override fun onOperateSeeking(startTimeMs: Long, curTimeMs: Long) {
-        if (videoConfig.doSeekToWhileSeeking) {
+        if (videoConfig.updateFrameDuringSeeking) {
             mStateMachine.postNewest(MsgSeek(curTimeMs))
         }
     }
 
     override fun onOperateSeekEnd(timeMs: Long) {
         mStateMachine.postNewest(MsgSeek(timeMs))
+        if (videoConfig.muteDuringSeeking) {
+            mStateMachine.post(MsgMute(mStateRecorder.isMuteBeforeSeeking))
+        }
     }
 
     override fun getContext(): Context {
@@ -102,6 +113,7 @@ open class VideoBridge<out P : AbstractVideoRepo>(
 
     override fun onPlayerPrepared() {
         videoView.setDuration(mStateMachine.getDuration())
+        mStateMachine.post(MsgVolume(videoConfig.originalVolumeLeft, videoConfig.originalVolumeRight))
         mStateMachine.post(MsgPrepared())
         updateTimeThread(true)
     }

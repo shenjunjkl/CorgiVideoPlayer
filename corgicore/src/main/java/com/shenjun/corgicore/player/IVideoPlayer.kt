@@ -31,6 +31,12 @@ interface IVideoPlayer {
 
     fun getDuration(): Long
 
+    fun setVolume(volumeLeft: Float, volumeRight: Float)
+
+    fun setMute(mute: Boolean)
+
+    fun isMute(): Boolean
+
     interface IPlayerCallback {
 
         fun getContext(): Context

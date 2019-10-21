@@ -8,6 +8,18 @@ import com.shenjun.corgicore.player.IVideoPlayer
  * Created by shenjun on 2019-08-14.
  */
 class SystemVideoPlayer : IVideoPlayer{
+    override fun setVolume(volumeLeft: Float, volumeRight: Float) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun setMute(mute: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun isMute(): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getProgress(): Long {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
