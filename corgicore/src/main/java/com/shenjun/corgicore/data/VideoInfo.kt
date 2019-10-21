@@ -6,9 +6,19 @@ import android.os.Bundle
  * Created by shenjun on 2018/11/22.
  */
 data class VideoInfo(
+    var brief: Int = BRIEF_LOADING,
+    /**
+     * media info part
+     */
+    var title: String = "",
+    /**
+     * source part
+     */
     var url: String = "",
     var headers: Map<String, String> = mutableMapOf(),
-    var brief: Int = BRIEF_LOADING,
+    /**
+     * extra part
+     */
     var errorCode: Int = ERROR_OK,
     var errorMsg: String = "",
     var extra: Bundle = Bundle(),
@@ -18,7 +28,7 @@ data class VideoInfo(
     companion object {
         const val BRIEF_LOADING = 1
         const val BRIEF_CONFIG = 2
-        const val BRIEF_INFO = 3
+        const val BRIEF_MEDIA_INFO = 3
         const val BRIEF_SOURCE = 4
 
         const val ERROR_OK = 0

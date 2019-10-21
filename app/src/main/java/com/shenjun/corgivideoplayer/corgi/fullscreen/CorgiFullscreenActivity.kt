@@ -11,6 +11,7 @@ import com.shenjun.corgiextension.compat.registerLifecycle
 import com.shenjun.corgiextension.player.ijk.IjkPlayerProvider
 import com.shenjun.corgivideoplayer.corgi.CorgiRepo
 import com.shenjun.corgivideoplayer.corgi.fullscreen.controller.CorgiFullscreenBottomController
+import com.shenjun.corgivideoplayer.corgi.fullscreen.controller.CorgiFullscreenTopController
 
 /**
  * Created by shenjun on 2018/11/23.
@@ -22,7 +23,8 @@ class CorgiFullscreenActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         val view = ControllerVideoView(this)
         view.setBackgroundColor(Color.BLACK)
-        view.setController(CorgiFullscreenBottomController())
+        view.addController(CorgiFullscreenBottomController())
+        view.addController(CorgiFullscreenTopController())
 
         setContentView(view)
         val repo = CorgiRepo()

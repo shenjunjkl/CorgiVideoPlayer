@@ -132,13 +132,19 @@ open class VideoBridge<out P : AbstractVideoRepo>(
 
     override fun onDataReceived(info: VideoInfo) {
         when (info.brief) {
-
-
-            //todo
+            VideoInfo.BRIEF_LOADING -> handleVideoLoading(info)
+            VideoInfo.BRIEF_CONFIG -> handleVideoConfigReceived(info)
+            VideoInfo.BRIEF_MEDIA_INFO -> handleVideoMediaInfoReceived(info)
             VideoInfo.BRIEF_SOURCE -> handleVideoSourceReceived(info)
         }
+        videoView.updateVideoInfo(info)
     }
 
+    protected fun handleVideoLoading(info: VideoInfo) {}
+
+    protected fun handleVideoConfigReceived(info: VideoInfo) {}
+
+    protected fun handleVideoMediaInfoReceived(info: VideoInfo) {}
 
     protected fun handleVideoSourceReceived(info: VideoInfo) {
         mInterceptors.forEach {

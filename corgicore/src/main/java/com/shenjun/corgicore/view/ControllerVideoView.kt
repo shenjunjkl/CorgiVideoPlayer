@@ -5,9 +5,13 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
 import com.shenjun.corgicore.constant.ControllerConst
+import com.shenjun.corgicore.data.VideoInfo
+import com.shenjun.corgicore.log.logD
+import com.shenjun.corgicore.log.logW
 import com.shenjun.corgicore.view.controller.AbstractVideoController
 import com.shenjun.corgicore.view.listener.PlayPauseListener
 import com.shenjun.corgicore.view.listener.ProgressListener
+import com.shenjun.corgicore.view.listener.VideoInfoListener
 
 /**
  * Created by shenjun on 2018/11/22.
@@ -53,7 +57,7 @@ open class ControllerVideoView(
         }
     }
 
-    fun setController(controller: AbstractVideoController) {
+    fun addController(controller: AbstractVideoController) {
         val key = controller.key()
         removeController(key)
         val view = controller.createView(context, this)
@@ -84,6 +88,13 @@ open class ControllerVideoView(
     fun setPlayPauseState(isPlaying: Boolean) {
         findAllControllerImpl<PlayPauseListener> {
             it.onPlayPauseStateChanged(isPlaying)
+        }
+    }
+
+    fun updateVideoInfo(info: VideoInfo) {
+        logD("video info updated: $info")
+        findAllControllerImpl<VideoInfoListener> {
+            it.onVideoInfoUpdated(info)
         }
     }
 
