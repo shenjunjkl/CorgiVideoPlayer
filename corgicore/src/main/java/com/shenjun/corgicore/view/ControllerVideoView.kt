@@ -9,10 +9,7 @@ import com.shenjun.corgicore.data.VideoInfo
 import com.shenjun.corgicore.log.logD
 import com.shenjun.corgicore.log.logW
 import com.shenjun.corgicore.view.controller.AbstractVideoController
-import com.shenjun.corgicore.view.listener.PlayPauseListener
-import com.shenjun.corgicore.view.listener.ProgressListener
-import com.shenjun.corgicore.view.listener.SeekStateListener
-import com.shenjun.corgicore.view.listener.VideoInfoListener
+import com.shenjun.corgicore.view.listener.*
 
 /**
  * Created by shenjun on 2018/11/22.
@@ -78,6 +75,7 @@ open class ControllerVideoView(
                     } else {
                         controller.onHideView(view)
                     }
+                    videoViewCallback?.onOperateControllerVisibilityEvent(isShow, key)
                 }
             }
         }
@@ -117,6 +115,10 @@ open class ControllerVideoView(
 
     fun setPlayPauseState(isPlaying: Boolean) {
         findAllControllerImpl<PlayPauseListener> { it.onPlayPauseStateChanged(isPlaying) }
+    }
+
+    fun setLoadingState(isLoading: Boolean, isBuffering: Boolean) {
+        findAllControllerImpl<LoadingListener> { it.onLoadingStateChanged(isLoading, isBuffering) }
     }
 
     fun updateVideoInfo(info: VideoInfo) {

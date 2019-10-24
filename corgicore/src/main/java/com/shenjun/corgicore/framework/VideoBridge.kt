@@ -23,7 +23,6 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     private val videoConfig: VideoConfig = VideoConfig()
 ) : VideoViewCallback, IVideoPlayer.IPlayerCallback, AbstractVideoRepo.RepoCallback {
 
-
     private val mStateMachine = PlayerStateMachine()
     private val mInterceptors = mutableListOf<VideoInterceptor>()
     private val mStateRecorder = VideoStateRecorder()
@@ -45,6 +44,7 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     private fun initVideoBridge() {
         videoView.videoViewCallback = this
         repo.setRepoCallback(this)
+        videoView.setLoadingState(isLoading = true, isBuffering = false)
     }
 
     fun startPlay() {
@@ -94,6 +94,12 @@ open class VideoBridge<out P : AbstractVideoRepo>(
         }
     }
 
+    override fun onOperateControllerVisibilityEvent(isShow: Boolean, key: String) {
+        if (!isShow && mStateRecorder.isBuffering) {
+            videoView.setLoadingState(true, mStateRecorder.isBuffering)
+        }
+    }
+
     override fun getContext(): Context {
         return videoView.context
     }
@@ -112,10 +118,21 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     }
 
     override fun onPlayerPrepared() {
+        videoView.setLoadingState(false, mStateRecorder.isBuffering)
         videoView.setDuration(mStateMachine.getDuration())
         mStateMachine.post(MsgVolume(videoConfig.originalVolumeLeft, videoConfig.originalVolumeRight))
         mStateMachine.post(MsgPrepared())
         updateTimeThread(true)
+    }
+
+    override fun onPlayerBufferingStart() {
+        mStateRecorder.isBuffering = true
+        videoView.setLoadingState(true, mStateRecorder.isBuffering)
+    }
+
+    override fun onPlayerBufferingEnd() {
+        mStateRecorder.isBuffering = false
+        videoView.setLoadingState(false, mStateRecorder.isBuffering)
     }
 
     override fun onPlayerError(errorCode: Int, msg: String) {

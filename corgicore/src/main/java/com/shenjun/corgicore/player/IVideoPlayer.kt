@@ -47,6 +47,10 @@ interface IVideoPlayer {
 
         fun onPlayerPrepared()
 
+        fun onPlayerBufferingStart()
+
+        fun onPlayerBufferingEnd()
+
         fun onPlayerError(errorCode: Int, msg: String)
 
         fun onPlayerPlayPauseStateChanged(isPlaying: Boolean)

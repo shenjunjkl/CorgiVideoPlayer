@@ -21,5 +21,6 @@ interface VideoViewCallback {
 
     fun onOperateSeekEnd(timeMs: Long)
 
+    fun onOperateControllerVisibilityEvent(isShow: Boolean, key: String)
 
 }

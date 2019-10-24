@@ -29,7 +29,7 @@ class CorgiFullscreenActivity : FragmentActivity() {
         view.addController(CorgiFullscreenBottomController())
         view.addController(CorgiFullscreenTopController())
         view.addController(CorgiSeekStateController(), "state")
-//        view.addController(CorgiLoadingController(), "state")
+        view.addController(CorgiLoadingController(), "state")
 
         setContentView(view)
 
