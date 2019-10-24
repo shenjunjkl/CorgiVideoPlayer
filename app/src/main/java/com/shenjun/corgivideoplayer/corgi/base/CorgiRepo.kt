@@ -1,4 +1,4 @@
-package com.shenjun.corgivideoplayer.corgi
+package com.shenjun.corgivideoplayer.corgi.base
 
 import com.shenjun.corgicore.data.VideoInfo
 import com.shenjun.corgicore.framework.AbstractVideoRepo
@@ -21,7 +21,7 @@ class CorgiRepo : AbstractVideoRepo() {
         mVideoInfo.brief = VideoInfo.BRIEF_MEDIA_INFO
         notifyVideoInfoChanged()
         // can play now
-        mVideoInfo.url = DemoVideoUrl.LOCAL_MP4_1
+        mVideoInfo.url = DemoVideoUrl.MP4_5
         mVideoInfo.brief = VideoInfo.BRIEF_SOURCE
         notifyVideoInfoChanged()
     }

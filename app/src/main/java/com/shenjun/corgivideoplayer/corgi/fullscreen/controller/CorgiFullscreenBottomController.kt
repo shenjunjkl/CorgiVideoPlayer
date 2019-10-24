@@ -28,6 +28,7 @@ class CorgiFullscreenBottomController : AbstractVideoController(), ProgressListe
     private lateinit var mFullscreenIV: ImageView
 
     private var mSavedDuration = -1L
+    private var isSeeking = false
 
     override fun createView(ctx: Context, parent: ViewGroup): View {
         val view = View.inflate(ctx, R.layout.corgi_fullscreen_bottom_controller, null)
@@ -56,18 +57,20 @@ class CorgiFullscreenBottomController : AbstractVideoController(), ProgressListe
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
                 val time = seekBar?.getTimeMs(mSavedDuration) ?: return
+                isSeeking = true
                 eventCallback?.seekStart(time)
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 val time = seekBar?.getTimeMs(mSavedDuration) ?: return
+                isSeeking = false
                 eventCallback?.seekEnd(time)
             }
         })
     }
 
     override fun onProgressUpdate(timeMs: Long) {
-        if (timeMs < 0) return
+        if (timeMs < 0 || isSeeking) return
         mProgressTV.text = time2MediaLength(timeMs)
         mSeekBar.setProgressForVideo(timeMs, mSavedDuration)
     }

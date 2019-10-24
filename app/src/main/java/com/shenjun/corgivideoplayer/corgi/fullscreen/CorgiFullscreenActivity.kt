@@ -9,7 +9,9 @@ import com.shenjun.corgiextension.tools.fullScreen
 import com.shenjun.corgicore.view.ControllerVideoView
 import com.shenjun.corgiextension.compat.registerLifecycle
 import com.shenjun.corgiextension.player.ijk.IjkPlayerProvider
-import com.shenjun.corgivideoplayer.corgi.CorgiRepo
+import com.shenjun.corgivideoplayer.corgi.base.CorgiRepo
+import com.shenjun.corgivideoplayer.corgi.base.controller.CorgiLoadingController
+import com.shenjun.corgivideoplayer.corgi.base.controller.CorgiSeekStateController
 import com.shenjun.corgivideoplayer.corgi.fullscreen.controller.CorgiFullscreenBottomController
 import com.shenjun.corgivideoplayer.corgi.fullscreen.controller.CorgiFullscreenTopController
 
@@ -21,15 +23,20 @@ class CorgiFullscreenActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         fullScreen()
         super.onCreate(savedInstanceState)
+
         val view = ControllerVideoView(this)
         view.setBackgroundColor(Color.BLACK)
         view.addController(CorgiFullscreenBottomController())
         view.addController(CorgiFullscreenTopController())
+        view.addController(CorgiSeekStateController(), "state")
+//        view.addController(CorgiLoadingController(), "state")
 
         setContentView(view)
+
         val repo = CorgiRepo()
         val config = VideoConfig()
         config.playerProvider = IjkPlayerProvider()
+
         val bridge = VideoBridge(repo, view, config)
         bridge.startPlay()
         bridge.registerLifecycle(this)

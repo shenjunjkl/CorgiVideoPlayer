@@ -19,9 +19,25 @@ abstract class AbstractVideoController {
 
     fun key() = name()
 
+    fun show() {
+        eventCallback?.setVisibility(true, key())
+    }
+
+    fun hide() {
+        eventCallback?.setVisibility(false, key())
+    }
+
     open fun onViewCreated(view: View) {}
 
     open fun onControllerReplaced() {}
+
+    open fun onShowView(view: View) {
+        view.visibility = View.VISIBLE
+    }
+
+    open fun onHideView(view: View) {
+        view.visibility = View.GONE
+    }
 
     interface EventCallback {
         fun onControllerEvent(event: Int, extra: Bundle)
@@ -56,6 +72,13 @@ abstract class AbstractVideoController {
     fun EventCallback.seekEnd(timeMs: Long) {
         onControllerEvent(ControllerConst.SEEK_END, Bundle().apply {
             putLong(ControllerConst.KEY_TIME_MS, timeMs)
+        })
+    }
+
+    fun EventCallback.setVisibility(isShow: Boolean, controllerKey: String) {
+        onControllerEvent(ControllerConst.VISIBILITY, Bundle().apply {
+            putBoolean(ControllerConst.KEY_SHOW, isShow)
+            putString(ControllerConst.KEY_CONTROLLER_KEY, controllerKey)
         })
     }
 }
