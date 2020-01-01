@@ -1,17 +1,17 @@
 package com.shenjun.corgivideoplayer.corgi.fullscreen.controller
 
 import android.content.Context
-import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.widget.*
+import android.widget.ImageView
+import android.widget.SeekBar
+import android.widget.TextView
 import com.shenjun.corgicore.tools.time2MediaLength
 import com.shenjun.corgicore.view.controller.AbstractVideoController
 import com.shenjun.corgicore.view.listener.PlayPauseListener
 import com.shenjun.corgicore.view.listener.ProgressListener
 import com.shenjun.corgivideoplayer.R
-import com.shenjun.corgivideoplayer.dp2px
 import com.shenjun.corgivideoplayer.getTimeMs
 import com.shenjun.corgivideoplayer.setProgressForVideo
 
@@ -31,9 +31,7 @@ class CorgiFullscreenBottomController : AbstractVideoController(), ProgressListe
     private var isSeeking = false
 
     override fun createView(ctx: Context, parent: ViewGroup): View {
-        val view = View.inflate(ctx, R.layout.corgi_fullscreen_bottom_controller, null)
-        view.layoutParams = layoutParams(MATCH_PARENT, ctx.dp2px(60), Gravity.BOTTOM)
-        return view
+        return LayoutInflater.from(ctx).inflate(R.layout.corgi_fullscreen_bottom_controller, parent, false)
     }
 
     override fun onViewCreated(view: View) {

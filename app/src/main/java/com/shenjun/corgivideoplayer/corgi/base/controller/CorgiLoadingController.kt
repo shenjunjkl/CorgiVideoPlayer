@@ -1,7 +1,7 @@
 package com.shenjun.corgivideoplayer.corgi.base.controller
 
 import android.content.Context
-import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -17,9 +17,7 @@ import com.shenjun.corgivideoplayer.R
 class CorgiLoadingController : AbstractVideoController(), LoadingListener {
 
     override fun createView(ctx: Context, parent: ViewGroup): View {
-        val view = View.inflate(ctx, R.layout.corgi_loading_controller, null)
-        view.layoutParams = layoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER)
-        return view
+        return LayoutInflater.from(ctx).inflate(R.layout.corgi_loading_controller, parent, false)
     }
 
     override fun onViewCreated(view: View) {

@@ -1,10 +1,9 @@
 package com.shenjun.corgivideoplayer.corgi.base.controller
 
 import android.content.Context
-import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.TextView
 import com.shenjun.corgicore.tools.time2MediaLength
@@ -24,9 +23,7 @@ class CorgiSeekStateController : AbstractVideoController(), ProgressListener, Se
     private var mSavedDuration = -1L
 
     override fun createView(ctx: Context, parent: ViewGroup): View {
-        val view = View.inflate(ctx, R.layout.corgi_seek_state_controller, null)
-        view.layoutParams = layoutParams(WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER)
-        return view
+        return LayoutInflater.from(ctx).inflate(R.layout.corgi_seek_state_controller, parent, false)
     }
 
     override fun onViewCreated(view: View) {
