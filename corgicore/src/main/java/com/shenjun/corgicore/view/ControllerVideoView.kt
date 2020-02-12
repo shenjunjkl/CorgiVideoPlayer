@@ -1,14 +1,12 @@
 package com.shenjun.corgicore.view
 
 import android.content.Context
-import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
 import com.shenjun.corgicore.constant.ControllerConst
 import com.shenjun.corgicore.data.VideoInfo
 import com.shenjun.corgicore.log.logD
-import com.shenjun.corgicore.log.logW
 import com.shenjun.corgicore.tools.getActivity
 import com.shenjun.corgicore.view.controller.AbstractVideoController
 import com.shenjun.corgicore.view.listener.*
@@ -24,7 +22,7 @@ open class ControllerVideoView(
 
     private val mControllersMap: MutableMap<String, Pair<AbstractVideoController, View>> = mutableMapOf()
     /**
-     * if two controller is in list under the same key, they cannot coexist and only the latest one will show
+     * if two controller in list are under the same key, they cannot coexist and only the latest one will show
      */
     private val mControllerGroupMap: MutableMap<String, MutableSet<AbstractVideoController>> = mutableMapOf()
 
@@ -71,10 +69,19 @@ open class ControllerVideoView(
                     val controller = pair.first
                     val view = pair.second
                     if (isShow) {
-                        // check controllers in group first
-                        hideAllOtherControllerInSameGroup(controller)
+                        val hideAllOtherControllers = extra.getBoolean(ControllerConst.KEY_HIDE_ALL_OTHER_CONTROLLERS, false)
+                        if (hideAllOtherControllers) {
+                            hideAllOtherControllers(controller)
+                        } else {
+                            // check controllers in group
+                            hideAllOtherControllersInSameGroup(controller)
+                        }
                         controller.onShowView(view)
                     } else {
+                        val showMainControllers = extra.getBoolean(ControllerConst.KEY_SHOW_MAIN_CONTROLLERS, false)
+                        if (showMainControllers) {
+                            showMainControllers()
+                        }
                         controller.onHideView(view)
                     }
                     videoViewCallback?.onOperateControllerVisibilityEvent(isShow, key)
@@ -85,6 +92,9 @@ open class ControllerVideoView(
             }
             ControllerConst.FINISH -> {
                 getActivity(context)?.finish()
+            }
+            ControllerConst.RETRY -> {
+                videoViewCallback?.onOperateRetry()
             }
         }
     }
@@ -129,8 +139,28 @@ open class ControllerVideoView(
         findAllControllerImpl<LoadingListener> { it.onLoadingStateChanged(isLoading, isBuffering) }
     }
 
+    fun setErrorState(errorCode: Int, msg: String) {
+        findAllControllerImpl<ErrorListener> { it.onError(errorCode, msg) }
+    }
+
     fun setCompleteState() {
         findAllControllerImpl<CompleteListener> { it.onVideoComplete() }
+    }
+
+    fun showMainControllers() {
+        mControllersMap.values.forEach {
+            if (it.first.isMainController()) {
+                it.first.onShowView(it.second)
+            }
+        }
+    }
+
+    fun hideMainControllers() {
+        mControllersMap.values.forEach {
+            if (it.first.isMainController()) {
+                it.first.onHideView(it.second)
+            }
+        }
     }
 
     fun updateVideoInfo(info: VideoInfo) {
@@ -151,7 +181,16 @@ open class ControllerVideoView(
         }
     }
 
-    private fun hideAllOtherControllerInSameGroup(controller: AbstractVideoController) {
+    private fun hideAllOtherControllers(controller: AbstractVideoController) {
+        mControllersMap.values.forEach {
+            val c = it.first
+            if (c != controller) {
+                c.onHideView(it.second)
+            }
+        }
+    }
+
+    private fun hideAllOtherControllersInSameGroup(controller: AbstractVideoController) {
         mControllerGroupMap.values.forEach {
             if (it.contains(controller)) {
                 it.forEach { c ->

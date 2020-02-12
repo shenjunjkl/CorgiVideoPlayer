@@ -96,7 +96,18 @@ open class VideoBridge<out P : AbstractVideoRepo>(
 
     override fun onOperateReplay() {
         mStateMachine.postNewest(MsgStart(PlayerConst.PRIORITY_COMPLETE_RESTART))
+        videoView.showMainControllers()
         updateTimeThread(true)
+    }
+
+    override fun onOperateRetry() {
+        videoView.hideMainControllers()
+        videoView.setLoadingState(isLoading = true, isBuffering = false)
+        release()
+        startPlay()
+        videoView.getSurfaceTexture()?.let {
+            mStateMachine.post(MsgUpdateSurface(it), true)
+        }
     }
 
     override fun onOperateControllerVisibilityEvent(isShow: Boolean, key: String) {
@@ -125,6 +136,7 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     override fun onPlayerPrepared() {
         videoView.setLoadingState(false, mStateRecorder.isBuffering)
         videoView.setDuration(mStateMachine.getDuration())
+        videoView.showMainControllers()
         mStateMachine.post(MsgVolume(videoConfig.originalVolumeLeft, videoConfig.originalVolumeRight))
         mStateMachine.post(MsgPrepared())
         updateTimeThread(true)
@@ -142,6 +154,8 @@ open class VideoBridge<out P : AbstractVideoRepo>(
 
     override fun onPlayerError(errorCode: Int, msg: String) {
         logE("player error $errorCode, msg = $msg")
+        mStateMachine.post(MsgError(errorCode, msg))
+        videoView.setErrorState(errorCode, msg)
     }
 
     override fun onPlayerPlayPauseStateChanged(isPlaying: Boolean) {
@@ -200,7 +214,6 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     }
 
     fun getCurrentVideoInfo() = repo.getVideoInfo()
-
 
     protected fun progressUpdateIntervalMs() = 100L
 

@@ -19,6 +19,7 @@ object ControllerConst {
 
     const val FINISH = 7
 
+    const val RETRY = 8
 
 
     /**
@@ -33,4 +34,12 @@ object ControllerConst {
      * String, to find a specific controller
      */
     const val KEY_CONTROLLER_KEY = "corgi_controller_key"
+    /**
+     * boolean, hide all other controllers
+     */
+    const val KEY_HIDE_ALL_OTHER_CONTROLLERS = "corgi_hide_all_other_controllers"
+    /**
+     * boolean, show main controllers
+     */
+    const val KEY_SHOW_MAIN_CONTROLLERS = "corgi_show_main_controllers"
 }

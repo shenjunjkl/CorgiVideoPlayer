@@ -33,6 +33,8 @@ open class TextureVideoView(
         initTextureView()
     }
 
+    fun getSurfaceTexture() = mSurface
+
     private fun initTextureView() {
         val lp = LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT

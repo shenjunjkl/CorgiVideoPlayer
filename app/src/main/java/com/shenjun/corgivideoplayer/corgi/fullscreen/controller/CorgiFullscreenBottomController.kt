@@ -99,4 +99,6 @@ class CorgiFullscreenBottomController : AbstractVideoController(), ProgressListe
             }
         }
     }
+
+    override fun isMainController() = true
 }

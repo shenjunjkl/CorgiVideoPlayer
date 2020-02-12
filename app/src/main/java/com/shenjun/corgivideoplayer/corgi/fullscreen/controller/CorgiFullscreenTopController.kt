@@ -36,4 +36,6 @@ class CorgiFullscreenTopController : AbstractVideoController(), VideoInfoListene
             mTitleTV.text = info.title
         }
     }
+
+    override fun isMainController() = true
 }

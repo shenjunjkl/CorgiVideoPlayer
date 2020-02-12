@@ -31,6 +31,6 @@ class CorgiCompleteController : AbstractVideoController(), CompleteListener {
     }
 
     override fun onVideoComplete() {
-        show()
+        show(true)
     }
 }

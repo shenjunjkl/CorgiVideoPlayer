@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import com.shenjun.corgicore.constant.ControllerConst
 import com.shenjun.corgicore.tools.name
 
@@ -19,12 +18,16 @@ abstract class AbstractVideoController {
 
     fun key() = name()
 
-    fun show() {
-        eventCallback?.setVisibility(true, key())
+    fun show(hideAll: Boolean = false) {
+        eventCallback?.setVisibility(true, key(), Bundle().apply {
+            putBoolean(ControllerConst.KEY_HIDE_ALL_OTHER_CONTROLLERS, hideAll)
+        })
     }
 
-    fun hide() {
-        eventCallback?.setVisibility(false, key())
+    fun hide(showMainController: Boolean = false) {
+        eventCallback?.setVisibility(false, key(), Bundle().apply {
+            putBoolean(ControllerConst.KEY_SHOW_MAIN_CONTROLLERS, showMainController)
+        })
     }
 
     open fun onViewCreated(view: View) {}
@@ -38,6 +41,12 @@ abstract class AbstractVideoController {
     open fun onHideView(view: View) {
         view.visibility = View.GONE
     }
+
+    /**
+     * if a controller is a main controller, it will show itself when user tap the screen
+     * and hide itself when tapped again
+     */
+    open fun isMainController() = false
 
     interface EventCallback {
         fun onControllerEvent(event: Int, extra: Bundle)
@@ -69,10 +78,11 @@ abstract class AbstractVideoController {
         })
     }
 
-    fun EventCallback.setVisibility(isShow: Boolean, controllerKey: String) {
+    fun EventCallback.setVisibility(isShow: Boolean, controllerKey: String, extraBundle: Bundle = Bundle()) {
         onControllerEvent(ControllerConst.VISIBILITY, Bundle().apply {
             putBoolean(ControllerConst.KEY_SHOW, isShow)
             putString(ControllerConst.KEY_CONTROLLER_KEY, controllerKey)
+            putAll(extraBundle)
         })
     }
 
@@ -82,5 +92,9 @@ abstract class AbstractVideoController {
 
     fun EventCallback.finish() {
         onControllerEvent(ControllerConst.FINISH, Bundle())
+    }
+
+    fun EventCallback.retry() {
+        onControllerEvent(ControllerConst.RETRY, Bundle())
     }
 }
