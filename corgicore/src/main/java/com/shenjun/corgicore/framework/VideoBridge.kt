@@ -94,6 +94,11 @@ open class VideoBridge<out P : AbstractVideoRepo>(
         }
     }
 
+    override fun onOperateReplay() {
+        mStateMachine.postNewest(MsgStart(PlayerConst.PRIORITY_COMPLETE_RESTART))
+        updateTimeThread(true)
+    }
+
     override fun onOperateControllerVisibilityEvent(isShow: Boolean, key: String) {
         if (!isShow && mStateRecorder.isBuffering) {
             videoView.setLoadingState(true, mStateRecorder.isBuffering)
@@ -141,6 +146,16 @@ open class VideoBridge<out P : AbstractVideoRepo>(
 
     override fun onPlayerPlayPauseStateChanged(isPlaying: Boolean) {
         videoView.setPlayPauseState(isPlaying)
+    }
+
+    override fun onPlayerComplete() {
+        mStateMachine.post(MsgComplete())
+        if (videoConfig.loopVideo) {
+            mStateMachine.postNewest(MsgStart(PlayerConst.PRIORITY_COMPLETE_RESTART))
+        } else {
+            updateTimeThread(false)
+            videoView.setCompleteState()
+        }
     }
 
     override fun onBufferingUpdate(percent: Float) {

@@ -15,9 +15,9 @@ object ControllerConst {
      */
     const val VISIBILITY = 5
 
+    const val REPLAY = 6
 
-
-
+    const val FINISH = 7
 
 
 

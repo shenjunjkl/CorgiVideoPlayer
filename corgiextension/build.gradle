@@ -37,6 +37,8 @@ dependencies {
     api 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'
     api 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.4'
     api 'tv.danmaku.ijk.media:ijkplayer-armv5:0.8.4'
+    api 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.4'
+    api 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.4'
     api project(':corgicore')
 }
 repositories {

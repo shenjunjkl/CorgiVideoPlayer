@@ -16,6 +16,8 @@ class VideoConfig : IVideoPlayer.IPlayerProvider {
     var originalVolumeLeft = 1f
     var originalVolumeRight = 1f
 
+    var loopVideo = false
+
     override fun createVideoPlayer(): IVideoPlayer {
         val p = playerProvider ?: SystemPlayerProvider().apply { playerProvider = this }
         return p.createVideoPlayer()

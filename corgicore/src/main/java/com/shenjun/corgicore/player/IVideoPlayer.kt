@@ -55,6 +55,8 @@ interface IVideoPlayer {
 
         fun onPlayerPlayPauseStateChanged(isPlaying: Boolean)
 
+        fun onPlayerComplete()
+
         /**
          * called when video buffering size is updated, percent ranges from 0f to 1f
          */

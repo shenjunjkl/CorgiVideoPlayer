@@ -1,5 +1,8 @@
 package com.shenjun.corgicore.tools
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import java.util.*
 
 /**
@@ -26,4 +29,20 @@ fun time2MediaLength(time: Long): String {
     } else {
         String.format(Locale.ENGLISH, "%02d:%02d:%02d", hour, minute, second)
     }
+}
+
+fun getActivity(ctx: Context): Activity? {
+    var currentContext = ctx
+    for (i in 0..5) {
+        if (currentContext is Activity) {
+            return currentContext
+        }
+        if (currentContext is ContextWrapper) {
+            val base = currentContext.baseContext
+            if (base == null || base === ctx)
+                return null
+            currentContext = base
+        }
+    }
+    return null
 }

@@ -171,6 +171,7 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
         }
 
         override fun onCompletion(player: IMediaPlayer?) {
+            mCallback?.onPlayerComplete()
         }
 
         override fun onError(player: IMediaPlayer?, what: Int, extra: Int): Boolean {

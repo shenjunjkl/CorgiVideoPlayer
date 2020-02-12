@@ -43,12 +43,6 @@ abstract class AbstractVideoController {
         fun onControllerEvent(event: Int, extra: Bundle)
     }
 
-    fun layoutParams(width: Int, height: Int, gravity: Int): FrameLayout.LayoutParams {
-        val lp = FrameLayout.LayoutParams(width, height)
-        lp.gravity = gravity
-        return lp
-    }
-
     fun EventCallback?.setPlayPause(isPlay: Boolean) {
         //todo
     }
@@ -80,5 +74,13 @@ abstract class AbstractVideoController {
             putBoolean(ControllerConst.KEY_SHOW, isShow)
             putString(ControllerConst.KEY_CONTROLLER_KEY, controllerKey)
         })
+    }
+
+    fun EventCallback.replay() {
+        onControllerEvent(ControllerConst.REPLAY, Bundle())
+    }
+
+    fun EventCallback.finish() {
+        onControllerEvent(ControllerConst.FINISH, Bundle())
     }
 }

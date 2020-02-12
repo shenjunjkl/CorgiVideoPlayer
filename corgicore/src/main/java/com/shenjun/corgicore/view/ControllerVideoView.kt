@@ -1,6 +1,7 @@
 package com.shenjun.corgicore.view
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
@@ -8,6 +9,7 @@ import com.shenjun.corgicore.constant.ControllerConst
 import com.shenjun.corgicore.data.VideoInfo
 import com.shenjun.corgicore.log.logD
 import com.shenjun.corgicore.log.logW
+import com.shenjun.corgicore.tools.getActivity
 import com.shenjun.corgicore.view.controller.AbstractVideoController
 import com.shenjun.corgicore.view.listener.*
 
@@ -78,6 +80,12 @@ open class ControllerVideoView(
                     videoViewCallback?.onOperateControllerVisibilityEvent(isShow, key)
                 }
             }
+            ControllerConst.REPLAY -> {
+                videoViewCallback?.onOperateReplay()
+            }
+            ControllerConst.FINISH -> {
+                getActivity(context)?.finish()
+            }
         }
     }
 
@@ -119,6 +127,10 @@ open class ControllerVideoView(
 
     fun setLoadingState(isLoading: Boolean, isBuffering: Boolean) {
         findAllControllerImpl<LoadingListener> { it.onLoadingStateChanged(isLoading, isBuffering) }
+    }
+
+    fun setCompleteState() {
+        findAllControllerImpl<CompleteListener> { it.onVideoComplete() }
     }
 
     fun updateVideoInfo(info: VideoInfo) {
