@@ -22,6 +22,7 @@ class CorgiCompleteController : AbstractVideoController(), CompleteListener {
         view.setOnClickListener { }
         val replayLL = view.findViewById<View>(R.id.replay_ll)
         replayLL.setOnClickListener {
+            hide(showMainController = false)
             eventCallback?.replay()
         }
         val finishLL = view.findViewById<View>(R.id.finish_ll)

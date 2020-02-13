@@ -171,15 +171,12 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
         }
 
         override fun onCompletion(player: IMediaPlayer?) {
-            // workaround: onCompletion may be called after onError, filter this case
-            if (player != null && player.duration > 0 && player.currentPosition > player.duration * 0.8) {
-                mCallback?.onPlayerComplete()
-            }
+            mCallback?.onPlayerComplete()
         }
 
         override fun onError(player: IMediaPlayer?, what: Int, extra: Int): Boolean {
             mCallback?.onPlayerError(VideoErrorConst.PLAYER_INNER_ERROR, "$what, $extra")
-            return false
+            return true
         }
 
         override fun onVideoSizeChanged(player: IMediaPlayer?, width: Int, height: Int, sarNum: Int, sarDen: Int) {
