@@ -10,10 +10,7 @@ import com.shenjun.corgiextension.compat.registerLifecycle
 import com.shenjun.corgiextension.player.ijk.IjkPlayerProvider
 import com.shenjun.corgiextension.tools.fullScreen
 import com.shenjun.corgivideoplayer.corgi.base.CorgiRepo
-import com.shenjun.corgivideoplayer.corgi.base.controller.CorgiCompleteController
-import com.shenjun.corgivideoplayer.corgi.base.controller.CorgiErrorController
-import com.shenjun.corgivideoplayer.corgi.base.controller.CorgiLoadingController
-import com.shenjun.corgivideoplayer.corgi.base.controller.CorgiSeekStateController
+import com.shenjun.corgivideoplayer.corgi.base.controller.*
 import com.shenjun.corgivideoplayer.corgi.fullscreen.controller.CorgiFullscreenBottomController
 import com.shenjun.corgivideoplayer.corgi.fullscreen.controller.CorgiFullscreenTopController
 
@@ -34,6 +31,7 @@ class CorgiFullscreenActivity : FragmentActivity() {
         view.addController(CorgiLoadingController(), "state")
         view.addController(CorgiCompleteController(), "state")
         view.addController(CorgiErrorController(), "state")
+        view.addController(CorgiSettingsController())
 
         setContentView(view)
 

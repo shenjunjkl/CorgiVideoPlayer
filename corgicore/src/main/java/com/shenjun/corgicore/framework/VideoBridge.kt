@@ -50,6 +50,7 @@ open class VideoBridge<out P : AbstractVideoRepo>(
         videoView.videoViewCallback = this
         repo.setRepoCallback(this)
         videoView.setLoadingState(isLoading = true, isBuffering = false)
+        videoView.attachVideoConfig(videoConfig)
         textureSizeCalculator.updateFillMode(videoConfig.fillMode, videoConfig.fillModeNum, videoConfig.fillModeDen)
     }
 
@@ -115,6 +116,10 @@ open class VideoBridge<out P : AbstractVideoRepo>(
         videoView.getSurfaceTexture()?.let {
             mStateMachine.post(MsgUpdateSurface(it), true)
         }
+    }
+
+    override fun onOperateRefreshFillMode() {
+        textureSizeCalculator.updateFillMode(videoConfig.fillMode, videoConfig.fillModeNum, videoConfig.fillModeDen)
     }
 
     override fun onOperateControllerVisibilityEvent(isShow: Boolean, key: String) {

@@ -21,6 +21,8 @@ object ControllerConst {
 
     const val RETRY = 8
 
+    const val REFRESH_FILL_MODE = 9
+
 
     /**
      * long, time in millisecond

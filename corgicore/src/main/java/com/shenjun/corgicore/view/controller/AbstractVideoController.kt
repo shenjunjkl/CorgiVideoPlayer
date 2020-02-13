@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import com.shenjun.corgicore.constant.ControllerConst
+import com.shenjun.corgicore.framework.VideoConfig
 import com.shenjun.corgicore.tools.name
 
 /**
@@ -13,19 +14,20 @@ import com.shenjun.corgicore.tools.name
 abstract class AbstractVideoController {
 
     var eventCallback: EventCallback? = null
+    private var videoConfigRetriever: VideoConfigRetriever? = null
 
     abstract fun createView(ctx: Context, parent: ViewGroup): View
 
     fun key() = name()
 
-    fun show(hideAll: Boolean = false) {
-        eventCallback?.setVisibility(true, key(), Bundle().apply {
+    fun show(controllerKey: String = key(), hideAll: Boolean = false) {
+        eventCallback?.setVisibility(true, controllerKey, Bundle().apply {
             putBoolean(ControllerConst.KEY_HIDE_ALL_OTHER_CONTROLLERS, hideAll)
         })
     }
 
-    fun hide(showMainController: Boolean = false) {
-        eventCallback?.setVisibility(false, key(), Bundle().apply {
+    fun hide(controllerKey: String = key(), showMainController: Boolean = false) {
+        eventCallback?.setVisibility(false, controllerKey, Bundle().apply {
             putBoolean(ControllerConst.KEY_SHOW_MAIN_CONTROLLERS, showMainController)
         })
     }
@@ -48,8 +50,19 @@ abstract class AbstractVideoController {
      */
     open fun isMainController() = false
 
+    fun setVideoConfigRetriever(retriever: VideoConfigRetriever?) {
+        videoConfigRetriever = retriever
+    }
+
+    protected fun getVideoConfig() = videoConfigRetriever?.getVideoConfig() ?: VideoConfig()
+
+
     interface EventCallback {
         fun onControllerEvent(event: Int, extra: Bundle)
+    }
+
+    interface VideoConfigRetriever {
+        fun getVideoConfig(): VideoConfig
     }
 
     fun EventCallback?.setPlayPause(isPlay: Boolean) {
@@ -78,7 +91,7 @@ abstract class AbstractVideoController {
         })
     }
 
-    fun EventCallback.setVisibility(isShow: Boolean, controllerKey: String, extraBundle: Bundle = Bundle()) {
+    private fun EventCallback.setVisibility(isShow: Boolean, controllerKey: String, extraBundle: Bundle = Bundle()) {
         onControllerEvent(ControllerConst.VISIBILITY, Bundle().apply {
             putBoolean(ControllerConst.KEY_SHOW, isShow)
             putString(ControllerConst.KEY_CONTROLLER_KEY, controllerKey)
@@ -96,5 +109,9 @@ abstract class AbstractVideoController {
 
     fun EventCallback.retry() {
         onControllerEvent(ControllerConst.RETRY, Bundle())
+    }
+
+    fun EventCallback.refreshFillMode() {
+        onControllerEvent(ControllerConst.REFRESH_FILL_MODE, Bundle())
     }
 }

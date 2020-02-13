@@ -25,6 +25,8 @@ interface VideoViewCallback {
 
     fun onOperateRetry()
 
+    fun onOperateRefreshFillMode()
+
     fun onOperateControllerVisibilityEvent(isShow: Boolean, key: String)
 
 }

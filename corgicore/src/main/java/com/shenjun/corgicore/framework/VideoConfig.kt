@@ -18,7 +18,7 @@ class VideoConfig : IVideoPlayer.IPlayerProvider {
 
     var loopVideo = false
 
-    var fillMode = 1
+    var fillMode = FILL_MODE_FIT_CENTER
     var fillModeNum = 0
     var fillModeDen = 0
 

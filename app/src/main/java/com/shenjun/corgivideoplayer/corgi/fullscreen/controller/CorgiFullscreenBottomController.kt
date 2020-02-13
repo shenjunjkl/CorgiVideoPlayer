@@ -12,6 +12,7 @@ import com.shenjun.corgicore.view.controller.AbstractVideoController
 import com.shenjun.corgicore.view.listener.PlayPauseListener
 import com.shenjun.corgicore.view.listener.ProgressListener
 import com.shenjun.corgivideoplayer.R
+import com.shenjun.corgivideoplayer.corgi.base.controller.CorgiSettingsController
 import com.shenjun.corgivideoplayer.getTimeMs
 import com.shenjun.corgivideoplayer.setProgressForVideo
 
@@ -92,7 +93,7 @@ class CorgiFullscreenBottomController : AbstractVideoController(), ProgressListe
         when (v?.id) {
             R.id.play_pause_iv -> eventCallback?.reversePlayState()
             R.id.menu_iv -> {
-                //todo
+                show(CorgiSettingsController().key(), true)
             }
             R.id.full_screen_iv -> {
                 //todo

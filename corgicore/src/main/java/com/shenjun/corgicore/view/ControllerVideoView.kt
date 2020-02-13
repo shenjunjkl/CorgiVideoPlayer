@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.shenjun.corgicore.constant.ControllerConst
 import com.shenjun.corgicore.data.VideoInfo
+import com.shenjun.corgicore.framework.VideoConfig
 import com.shenjun.corgicore.log.logD
 import com.shenjun.corgicore.tools.getActivity
 import com.shenjun.corgicore.view.controller.AbstractVideoController
@@ -18,7 +19,7 @@ open class ControllerVideoView(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : TextureVideoView(context, attrs, defStyleAttr), AbstractVideoController.EventCallback {
+) : TextureVideoView(context, attrs, defStyleAttr), AbstractVideoController.EventCallback, AbstractVideoController.VideoConfigRetriever {
 
     private val mControllersMap: MutableMap<String, Pair<AbstractVideoController, View>> = mutableMapOf()
     /**
@@ -27,6 +28,7 @@ open class ControllerVideoView(
     private val mControllerGroupMap: MutableMap<String, MutableSet<AbstractVideoController>> = mutableMapOf()
 
     private var seekStartTimeMs = 0L
+    private var mConfig: VideoConfig? = null
 
     init {
         initControllerView()
@@ -96,7 +98,18 @@ open class ControllerVideoView(
             ControllerConst.RETRY -> {
                 videoViewCallback?.onOperateRetry()
             }
+            ControllerConst.REFRESH_FILL_MODE -> {
+                videoViewCallback?.onOperateRefreshFillMode()
+            }
         }
+    }
+
+    fun attachVideoConfig(videoConfig: VideoConfig) {
+        mConfig = videoConfig
+    }
+
+    override fun getVideoConfig(): VideoConfig {
+        return mConfig ?: VideoConfig()
     }
 
     fun addController(controller: AbstractVideoController) {
@@ -105,6 +118,7 @@ open class ControllerVideoView(
         val view = controller.createView(context, this)
         addView(view)
         controller.eventCallback = this
+        controller.setVideoConfigRetriever(this)
         mControllersMap[key] = controller to view
         controller.onViewCreated(view)
     }
@@ -174,6 +188,7 @@ open class ControllerVideoView(
         controller?.let {
             it.onControllerReplaced()
             it.eventCallback = null
+            it.setVideoConfigRetriever(null)
         }
         val view = pair?.second
         view?.let {

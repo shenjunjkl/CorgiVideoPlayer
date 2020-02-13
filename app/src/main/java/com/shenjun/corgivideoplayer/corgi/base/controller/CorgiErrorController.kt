@@ -25,6 +25,6 @@ class CorgiErrorController : AbstractVideoController(), ErrorListener {
     }
 
     override fun onError(errorCode: Int, msg: String) {
-        show(true)
+        show(hideAll = true)
     }
 }
