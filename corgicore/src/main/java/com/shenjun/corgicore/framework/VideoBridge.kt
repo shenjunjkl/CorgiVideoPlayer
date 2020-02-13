@@ -12,6 +12,7 @@ import com.shenjun.corgicore.log.logE
 import com.shenjun.corgicore.player.IVideoPlayer
 import com.shenjun.corgicore.player.PlayerStateMachine
 import com.shenjun.corgicore.player.msg.*
+import com.shenjun.corgicore.tools.TextureSizeCalculator
 import com.shenjun.corgicore.view.ControllerVideoView
 
 /**
@@ -26,6 +27,10 @@ open class VideoBridge<out P : AbstractVideoRepo>(
     private val mStateMachine = PlayerStateMachine()
     private val mInterceptors = mutableListOf<VideoInterceptor>()
     private val mStateRecorder = VideoStateRecorder()
+    private val textureSizeCalculator = TextureSizeCalculator { w, h ->
+        videoView.resizeTextureView(w, h)
+        onTextureViewResize(w, h)
+    }
 
     private val mHandler = Handler()
     private val mUpdateTimeThread = object : Runnable {
@@ -45,6 +50,7 @@ open class VideoBridge<out P : AbstractVideoRepo>(
         videoView.videoViewCallback = this
         repo.setRepoCallback(this)
         videoView.setLoadingState(isLoading = true, isBuffering = false)
+        textureSizeCalculator.updateFillMode(videoConfig.fillMode, videoConfig.fillModeNum, videoConfig.fillModeDen)
     }
 
     fun startPlay() {
@@ -53,6 +59,7 @@ open class VideoBridge<out P : AbstractVideoRepo>(
 
     override fun onViewSizeChanged(width: Int, height: Int) {
         logD("onViewSizeChanged: width = $width, height = $height")
+        textureSizeCalculator.updateViewSize(width, height)
     }
 
     override fun onViewSurfaceAvailable(surfaceTexture: SurfaceTexture) {
@@ -172,6 +179,10 @@ open class VideoBridge<out P : AbstractVideoRepo>(
         }
     }
 
+    override fun onPlayerSizeChanged(width: Int, height: Int) {
+        textureSizeCalculator.updatePlayerSize(width, height)
+    }
+
     override fun onBufferingUpdate(percent: Float) {
         videoView.setBufferingPercent(percent)
     }
@@ -199,6 +210,10 @@ open class VideoBridge<out P : AbstractVideoRepo>(
             }
         }
         mStateMachine.post(MsgPrepare(info))
+    }
+
+    protected fun onTextureViewResize(width: Int, height: Int) {
+
     }
 
     fun pause() {

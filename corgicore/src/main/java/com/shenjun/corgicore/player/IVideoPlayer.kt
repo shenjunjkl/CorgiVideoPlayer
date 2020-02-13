@@ -57,6 +57,8 @@ interface IVideoPlayer {
 
         fun onPlayerComplete()
 
+        fun onPlayerSizeChanged(width: Int, height: Int)
+
         /**
          * called when video buffering size is updated, percent ranges from 0f to 1f
          */

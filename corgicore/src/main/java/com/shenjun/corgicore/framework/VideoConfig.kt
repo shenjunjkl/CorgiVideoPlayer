@@ -18,6 +18,17 @@ class VideoConfig : IVideoPlayer.IPlayerProvider {
 
     var loopVideo = false
 
+    var fillMode = 1
+    var fillModeNum = 0
+    var fillModeDen = 0
+
+    companion object {
+        const val FILL_MODE_FIT_CENTER = 0
+        const val FILL_MODE_CENTER_CROP = 1
+        const val FILL_MODE_FIT_XY = 2
+        const val FILL_MODE_CENTER_RATIO = 3
+    }
+
     override fun createVideoPlayer(): IVideoPlayer {
         val p = playerProvider ?: SystemPlayerProvider().apply { playerProvider = this }
         return p.createVideoPlayer()

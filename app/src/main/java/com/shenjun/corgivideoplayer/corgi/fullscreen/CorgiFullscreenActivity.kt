@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import com.shenjun.corgicore.framework.VideoBridge
 import com.shenjun.corgicore.framework.VideoConfig
-import com.shenjun.corgiextension.tools.fullScreen
 import com.shenjun.corgicore.view.ControllerVideoView
 import com.shenjun.corgiextension.compat.registerLifecycle
 import com.shenjun.corgiextension.player.ijk.IjkPlayerProvider
+import com.shenjun.corgiextension.tools.fullScreen
 import com.shenjun.corgivideoplayer.corgi.base.CorgiRepo
 import com.shenjun.corgivideoplayer.corgi.base.controller.CorgiCompleteController
 import com.shenjun.corgivideoplayer.corgi.base.controller.CorgiErrorController

@@ -183,6 +183,7 @@ class IjkCorgiVideoPlayer : IVideoPlayer {
         }
 
         override fun onVideoSizeChanged(player: IMediaPlayer?, width: Int, height: Int, sarNum: Int, sarDen: Int) {
+            mCallback?.onPlayerSizeChanged(width, height)
         }
 
         override fun onInfo(player: IMediaPlayer?, what: Int, extra: Int): Boolean {

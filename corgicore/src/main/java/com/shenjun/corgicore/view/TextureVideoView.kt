@@ -66,4 +66,15 @@ open class TextureVideoView(
         super.onSizeChanged(w, h, oldw, oldh)
         videoViewCallback?.onViewSizeChanged(w, h)
     }
+
+    fun resizeTextureView(width: Int, height: Int) {
+        post {
+            val lp = mTextureView.layoutParams
+            if (lp.width != width || lp.height != height) {
+                lp.width = width
+                lp.height = height
+                mTextureView.layoutParams = lp
+            }
+        }
+    }
 }
