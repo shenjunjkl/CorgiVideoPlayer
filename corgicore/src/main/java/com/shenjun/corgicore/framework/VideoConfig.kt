@@ -22,6 +22,8 @@ class VideoConfig : IVideoPlayer.IPlayerProvider {
     var fillModeNum = 0
     var fillModeDen = 0
 
+    var autoHideMainControllerIntervalMs = 3000L
+
     companion object {
         const val FILL_MODE_FIT_CENTER = 0
         const val FILL_MODE_CENTER_CROP = 1

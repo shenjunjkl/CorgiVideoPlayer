@@ -3,11 +3,13 @@ package com.shenjun.corgicore.view
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import com.shenjun.corgicore.constant.ControllerConst
 import com.shenjun.corgicore.data.VideoInfo
 import com.shenjun.corgicore.framework.VideoConfig
 import com.shenjun.corgicore.log.logD
+import com.shenjun.corgicore.tools.GestureHelper
 import com.shenjun.corgicore.tools.getActivity
 import com.shenjun.corgicore.view.controller.AbstractVideoController
 import com.shenjun.corgicore.view.listener.*
@@ -19,7 +21,8 @@ open class ControllerVideoView(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : TextureVideoView(context, attrs, defStyleAttr), AbstractVideoController.EventCallback, AbstractVideoController.VideoConfigRetriever {
+) : TextureVideoView(context, attrs, defStyleAttr), AbstractVideoController.EventCallback,
+    AbstractVideoController.VideoConfigRetriever {
 
     private val mControllersMap: MutableMap<String, Pair<AbstractVideoController, View>> = mutableMapOf()
     /**
@@ -30,33 +33,54 @@ open class ControllerVideoView(
     private var seekStartTimeMs = 0L
     private var mConfig: VideoConfig? = null
 
-    init {
-        initControllerView()
-    }
+    private val mHideMainControllerRunnable = Runnable { hideMainControllers() }
+    private val mGestureHelper: GestureHelper = GestureHelper(context, object : GestureHelper.GestureEventCallback {
+        override fun onSingleTap() {
+            logD("onSingleTap")
+        }
 
-    private fun initControllerView() {
+        override fun onDoubleTap() {
+            logD("onDoubleTap")
+        }
 
+        override fun onHorizontalScroll(ev: MotionEvent, delta: Float) {
+            logD("onHorizontalScroll")
+        }
+
+        override fun onVerticalScroll(ev: MotionEvent, delta: Float) {
+            logD("onVerticalScroll")
+        }
+
+        override fun onScrollFinish(isVertical: Boolean) {
+            logD("onScrollFinish")
+        }
+    })
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        mGestureHelper.handleTouchEvent(event)
+        return true
     }
 
     override fun onControllerEvent(event: Int, extra: Bundle) {
         when (event) {
             ControllerConst.REVERSE_PLAY_STATE -> {
+                resetHideMainControllersCountDown()
                 videoViewCallback?.onOperateReversePlayState()
             }
             ControllerConst.SEEK_START -> {
-                //todo do not hide controller
+                pauseHideMainControllersCountDown()
                 seekStartTimeMs = extra.getLong(ControllerConst.KEY_TIME_MS)
                 videoViewCallback?.onOperateSeekStart(seekStartTimeMs)
                 findAllControllerImpl<SeekStateListener> { it.onSeekStart(seekStartTimeMs) }
             }
             ControllerConst.SEEKING -> {
-                //todo do not hide controller
+                pauseHideMainControllersCountDown()
                 val time = extra.getLong(ControllerConst.KEY_TIME_MS)
                 videoViewCallback?.onOperateSeeking(seekStartTimeMs, time)
                 findAllControllerImpl<SeekStateListener> { it.onSeeking(seekStartTimeMs, time) }
             }
             ControllerConst.SEEK_END -> {
-                //todo hide controller count down start
+                resetHideMainControllersCountDown()
                 val time = extra.getLong(ControllerConst.KEY_TIME_MS)
                 videoViewCallback?.onOperateSeekEnd(time)
                 findAllControllerImpl<SeekStateListener> { it.onSeekEnd(time) }
@@ -167,6 +191,7 @@ open class ControllerVideoView(
                 it.first.onShowView(it.second)
             }
         }
+        resetHideMainControllersCountDown()
     }
 
     fun hideMainControllers() {
@@ -180,6 +205,16 @@ open class ControllerVideoView(
     fun updateVideoInfo(info: VideoInfo) {
         logD("video info updated: $info")
         findAllControllerImpl<VideoInfoListener> { it.onVideoInfoUpdated(info) }
+    }
+
+    private fun resetHideMainControllersCountDown() {
+        val delay = mConfig?.autoHideMainControllerIntervalMs ?: 3000L
+        removeCallbacks(mHideMainControllerRunnable)
+        postDelayed(mHideMainControllerRunnable, delay)
+    }
+
+    private fun pauseHideMainControllersCountDown() {
+        removeCallbacks(mHideMainControllerRunnable)
     }
 
     private fun removeController(key: String) {
